@@ -197,9 +197,9 @@ public class WebpageReaderWithAgent extends javax.swing.JFrame {
             //fetchData(url);
             AmazonWebScraper scraper = new AmazonWebScraper();
             String resUrl = scraper.resolveURL(url);
-            scraper.findISBNNo(resUrl);
+            String isbnNo = scraper.findISBNNo(resUrl);
             // now we can go to the page and fetch details
-            
+            scraper.showDetails(isbnNo);
             //fetchData(resUrl);
             
         } catch(Exception e) {

@@ -22,7 +22,7 @@ public class AmazonWebScraper implements IWebScraper {
     private static final String amazonBookSearchURL1 = "http://www.amazon.com/s/ref=nb_sb_ss_i_0_21?url=search-alias%3Dstripbooks&field-keywords=#&sprefix=#+%2Cstripbooks%2C542&rh=i%3Astripbooks%2Ck%3A#";
     private static final String amazonBookSearchURL2 = "http://www.amazon.com/s/?url=search-alias%3Dstripbooks&field-keywords=&";
     private static final String amazonAllLink = "http://www.amazon.com/gp/offer-listing/059035342X/";
-    
+    // this is the url which we would append the ISBN no
     private static final String amazonBookFinalURL = "http://www.amazon.com/gp/offer-listing/";
     
     @Override
@@ -73,6 +73,10 @@ public class AmazonWebScraper implements IWebScraper {
         String isbnNo = div.getAttribute("name");
         webClient.closeAllWindows();
         return isbnNo;
+    }
+    
+    public void showDetails(String isbnNo) {
+        
     }
     
     
