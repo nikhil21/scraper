@@ -9,6 +9,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlDivision;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.client.utils.URIUtils;
 
@@ -23,7 +24,7 @@ public class AmazonWebScraper implements IWebScraper {
     private static final String amazonBookSearchURL2 = "http://www.amazon.com/s/?url=search-alias%3Dstripbooks&field-keywords=&";
     private static final String amazonAllLink = "http://www.amazon.com/gp/offer-listing/059035342X/";
     // this is the url which we would append the ISBN no
-    private static final String amazonBookFinalURL = "http://www.amazon.com/gp/offer-listing/";
+    private static final String amazonBookFinalURL = "www.amazon.com/gp/offer-listing/";
     
     @Override
     public void fetchDetails(String searchString) {
@@ -75,7 +76,14 @@ public class AmazonWebScraper implements IWebScraper {
         return isbnNo;
     }
     
-    public void showDetails(String isbnNo) {
+    public void showDetails(String isbnNo) throws URISyntaxException {
+        // create the final URL
+        String finalURL = amazonBookFinalURL+isbnNo;
+        // now create the final URL
+        URIBuilder builder = new URIBuilder();
+        builder.setScheme("http").setHost(finalURL);
+        URI uri = builder.build();
+        System.out.println(">>>>>>>>>>>>" + uri.toString());
         
     }
     
