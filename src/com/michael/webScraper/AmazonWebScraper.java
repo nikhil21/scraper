@@ -4,6 +4,10 @@
  */
 package com.michael.webScraper;
 
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlDivision;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import java.io.IOException;
 import java.net.URI;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.client.utils.URIUtils;
@@ -50,7 +54,7 @@ public class AmazonWebScraper implements IWebScraper {
      * Finds the ISBN no of the book if we provide the URL of the Amazon web page to it.
      * @param url 
      */
-    public String findISBNNo(String url) {
+    public String findISBNNo(String url) throws IOException {
         final WebClient webClient = new WebClient();
   //      final HtmlPage page = webClient.getPage("http://www.amazon.com/s/ref=nb_sb_ss_i_3_10?url=search-alias%3Dstripbooks&field-keywords=harry+potter+and+the+sorcerer%27s+stone&sprefix=harry+pott%2Cstripbooks%2C1159");
         //Assert.assertEquals("HtmlUnit - Welcome to HtmlUnit", page.getTitleText());
