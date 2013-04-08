@@ -7,9 +7,14 @@ package com.michael.webScraper;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlDivision;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.HtmlTableBody;
+import com.gargoylesoftware.htmlunit.html.HtmlTableCell;
+import com.gargoylesoftware.htmlunit.html.HtmlTableRow;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Iterator;
+import java.util.List;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.client.utils.URIUtils;
 
@@ -25,7 +30,7 @@ public class AmazonWebScraper implements IWebScraper {
     private static final String amazonAllLink = "http://www.amazon.com/gp/offer-listing/059035342X/";
     // this is the url which we would append the ISBN no
     private static final String amazonBookFinalURL = "www.amazon.com/gp/offer-listing/";
-    
+
     @Override
     public void fetchDetails(String searchString) {
         try {
@@ -52,12 +57,14 @@ public class AmazonWebScraper implements IWebScraper {
     }
 
     /**
-     * Finds the ISBN no of the book if we provide the URL of the Amazon web page to it.
-     * @param url 
+     * Finds the ISBN no of the book if we provide the URL of the Amazon web
+     * page to it.
+     *
+     * @param url
      */
     public String findISBNNo(String url) throws IOException {
         final WebClient webClient = new WebClient();
-  //      final HtmlPage page = webClient.getPage("http://www.amazon.com/s/ref=nb_sb_ss_i_3_10?url=search-alias%3Dstripbooks&field-keywords=harry+potter+and+the+sorcerer%27s+stone&sprefix=harry+pott%2Cstripbooks%2C1159");
+        //      final HtmlPage page = webClient.getPage("http://www.amazon.com/s/ref=nb_sb_ss_i_3_10?url=search-alias%3Dstripbooks&field-keywords=harry+potter+and+the+sorcerer%27s+stone&sprefix=harry+pott%2Cstripbooks%2C1159");
         //Assert.assertEquals("HtmlUnit - Welcome to HtmlUnit", page.getTitleText());
         final HtmlPage page = webClient.getPage(url);
         final String pageAsXml = page.asXml();
@@ -75,17 +82,57 @@ public class AmazonWebScraper implements IWebScraper {
         webClient.closeAllWindows();
         return isbnNo;
     }
-    
-    public void showDetails(String isbnNo) throws URISyntaxException {
+
+    public void showDetails(String isbnNo) throws URISyntaxException, IOException {
         // create the final URL
-        String finalURL = amazonBookFinalURL+isbnNo;
+        String finalURL = amazonBookFinalURL + isbnNo;
         // now create the final URL
         URIBuilder builder = new URIBuilder();
         builder.setScheme("http").setHost(finalURL);
         URI uri = builder.build();
         System.out.println(">>>>>>>>>>>>" + uri.toString());
-        
+
+        // fetch details
+        final WebClient webClient = new WebClient();
+        final HtmlPage page = webClient.getPage(uri.toString());
+
+        //get list of all tbody elements which has class as "result"
+        final List<?> tbodyResultList = page.getByXPath("//tbody[@class='result']");
+
+        //get div which has a 'name' attribute of 'John'
+        //final HtmlDivision div = (HtmlDivision) page.getByXPath("//div[@name='John']").get(0);
+        System.out.println("List has elements >> ");
+
+        Iterator it = tbodyResultList.iterator();
+
+        while (it.hasNext()) {
+            HtmlTableBody tableBodyElement = (HtmlTableBody) it.next();
+            System.out.println("\n " + tableBodyElement);
+            // get the table rows
+            List<HtmlTableRow> tableRows = tableBodyElement.getRows();
+            // now get the iterator on table row
+//            Iterator rowsIterator = tableRows.iterator();
+//            
+//            while(rowsIterator.hasNext()) {
+//                //
+//                 rowsIterator.next();
+//                for (HtmlTableCell cell : rowsIterator.next().getCells()) {
+//                System.out.println("   Found cell: " + cell.asText());
+//                }
+//            }
+            
+            // just print all the data
+            for (HtmlTableRow row : tableBodyElement.getRows()) {
+                System.out.println("Found row");
+                for (HtmlTableCell cell : row.getCells()) {
+                    System.out.println("Found cell: " + cell.asText());
+                }
+            }
+
+        }
+
+
+
+        webClient.closeAllWindows();
     }
-    
-    
 }
