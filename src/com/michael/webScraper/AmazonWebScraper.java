@@ -10,6 +10,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlTableBody;
 import com.gargoylesoftware.htmlunit.html.HtmlTableCell;
 import com.gargoylesoftware.htmlunit.html.HtmlTableRow;
+import com.gargoylesoftware.htmlunit.html.DomElement;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -122,10 +123,31 @@ public class AmazonWebScraper implements IWebScraper {
 //            }
             
             // just print all the data
+            String className ;
             for (HtmlTableRow row : tableBodyElement.getRows()) {
-                System.out.println("Found row");
+                System.out.println("Nexttttttttttttttttttttttttttttttt row");
                 for (HtmlTableCell cell : row.getCells()) {
-                    System.out.println("Found cell: " + cell.asText());
+//                    System.out.println("Found cell: " + cell.asText());
+                    for(DomElement element : cell.getChildElements()){
+                        className = element.getAttribute("class");
+                        if(className.equalsIgnoreCase("price")){
+                            System.out.println(">>>>>>>>>>>Found Price : "+element.asText());
+                        } else if(className.equalsIgnoreCase("condition")){
+                            System.out.println(">>>>>>>>>>>Found Condition : "+element.asText());
+                        } else if(className.equalsIgnoreCase("sellerInformation")){
+                            for(DomElement child1 : element.getChildElements()){
+                               for(DomElement child2 : child1.getChildElements()){                                   
+                                   if(child2.getAttribute("class").equalsIgnoreCase("seller")){
+                                       for(DomElement child3 : child2.getChildElements()){
+                                            if(!child3.getAttribute("class").equalsIgnoreCase("sellerHeader")){
+                                                System.out.println(">>>>>>>>>>>Found Seller : "+child3.asText());
+                                             }   
+                                       }
+                                   }                        
+                                }
+                             } 
+                        }   
+                    }
                 }
             }
 
