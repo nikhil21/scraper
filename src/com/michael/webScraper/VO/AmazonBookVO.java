@@ -14,9 +14,46 @@ import java.util.List;
  * @author nikhil
  */
 public class AmazonBookVO {
+
+    @Override
+    public String toString() {
+        return "AmazonBookVO{" + "author=" + author + ", bookName=" + bookName + ", sellers=" + sellers + '}';
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setBookName(String bookName) {
+        this.bookName = bookName;
+    }
+
+    public void setSellers(List<SellerVO> sellers) {
+        this.sellers = sellers;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getBookName() {
+        return bookName;
+    }
+
+    public List<SellerVO> getSellers() {
+        return sellers;
+    }
     
     String author;
     String bookName;
     List<SellerVO> sellers = new ArrayList<SellerVO>();
     
+    public static AmazonBookVO create(String author, String bookName, List<SellerVO> sellers){
+        AmazonBookVO vo = new AmazonBookVO();
+        vo.author=author;
+        vo.bookName=bookName;
+        vo.sellers=sellers;
+                
+        return vo;      
+    }
 }
