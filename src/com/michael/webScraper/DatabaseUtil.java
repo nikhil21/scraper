@@ -8,11 +8,13 @@ import com.michael.webScraper.VO.AmazonBookVO;
 import com.michael.webScraper.VO.SellerVO;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  *
@@ -22,6 +24,7 @@ public class DatabaseUtil {
     public static Connection conn= null;
     public static Statement stmt=null;
     public static String query="";
+    private static PreparedStatement preparedStatement = null;
     
     public static void establishDatabaseConnection(){
         System.out.println("Checking the connection to the DB..");
@@ -45,11 +48,13 @@ public class DatabaseUtil {
     }
     
     public static void initialize(){
+        
+        establishDatabaseConnection();
         try {
             query = "create table book "
-                    + "(id number NOT NULL,"
-                    + "book_name varchar2(100),"
-                    + "author varchar2(100)"
+                    + "(id INT NOT NULL,"
+                    + "book_name varchar(500),"
+                    + "author varchar(500)"
                     + ");";
             stmt.execute(query);
         } catch (SQLException ex) {
@@ -58,12 +63,12 @@ public class DatabaseUtil {
         
         try {
             query = "create table seller "
-                    + "(id number NOT NULL,"
-                    + "book_id number NOT NULL,"
-                    + "name varchar2(100),"
-                    + "condition varchar2(100),"
-                    + "price number(8,2),"
-                    + "rating number(8,2),"
+                    + "(id INT NOT NULL,"
+                    + "book_id INT NOT NULL,"
+                    + "name varchar(100),"
+                    + "book_condition varchar(100),"
+                    + "price DECIMAL(8,2),"
+                    + "rating DECIMAL(8,2)"
                     + ");";
             stmt.execute(query);
         } catch (SQLException ex) {
@@ -78,13 +83,28 @@ public class DatabaseUtil {
         try {
             query = "select max(id)+1 from book";
             book_id = getId(query, 1); 
+            System.out.println("Book ID is ***** "+book_id);
+            System.out.println("Book name is ***** "+book.getBookName());
+            System.out.println("Escaped name is ***** "+StringEscapeUtils.escapeEcmaScript(book.getBookName()));
+//            query = "insert into book values "
+//                + "(id, book_name, author) "
+//                + "("+book_id+", "
+//                    +"'"+StringEscapeUtils.escapeEcmaScript(book.getBookName())+"'"+", "
+//                    +"'"+StringEscapeUtils.escapeEcmaScript(book.getAuthor())+"'"+");";
+//            stmt.execute(query);
             
-            query = "insert into book values "
-                + "(id, book_name, author) "
-                + "("+book_id+", "
-                    +book.getBookName()+", "
-                    +book.getAuthor()+");";
-            stmt.execute(query);
+            // PreparedStatements can use variables and are more efficient
+        preparedStatement = conn
+          .prepareStatement("insert into  book values (?, ?, ?)");
+      // "myuser, webpage, datum, summery, COMMENTS from FEEDBACK.COMMENTS");
+      // Parameters start with 1
+        preparedStatement.setInt(1, book_id);
+        preparedStatement.setString(2, StringEscapeUtils.escapeEcmaScript(book.getBookName()));
+        preparedStatement.setString(3, StringEscapeUtils.escapeEcmaScript(book.getAuthor()));
+        
+        preparedStatement.executeUpdate();
+      
+      
             System.out.println("Inserted row into book : "+book_id);
             
             for(SellerVO seller : book.getSellers()){
@@ -92,7 +112,7 @@ public class DatabaseUtil {
                  seller_id = getId(query, 1); 
 
                  query = "insert into seller values "
-                     + "(id, book_id, name, condition, rating, price) "
+                     + "(id, book_id, name, book_condition, rating, price) "
                      + "("+seller_id
                          +", "+book_id
                          +", "+seller.getName()
@@ -104,8 +124,15 @@ public class DatabaseUtil {
                  System.out.println("Inserted row into seller : "+seller_id);
            }
            done = true; 
+           conn.commit();
         } catch (SQLException ex) {
             System.out.println("Exception at inserting into tables : "+ ex);
+            try {
+                conn.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(DatabaseUtil.class.getName()).log(Level.SEVERE, null, ex1);
+                System.out.println("Caught Exception.. "+ex1);
+            }
         }                 
         return done;
     }
