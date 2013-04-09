@@ -17,6 +17,7 @@ import javax.swing.JOptionPane;
  */
 public class Workers extends javax.swing.JFrame {
 
+    private static String CONNECTION_STRING = "jdbc:mysql://localhost:3306/";
     Connection con;
     Statement stmt;
     ResultSet rs;
@@ -31,7 +32,72 @@ public class Workers extends javax.swing.JFrame {
         displayFirstRecord();
     }
 
-    public void doConnect() {
+    public Connection doConnect() {
+        System.out.println("-------- MySQL JDBC Connection Testing ------------");
+        //Connection connection = null;
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Where is your MySQL JDBC Driver?");
+            e.printStackTrace();
+            return null;
+        }
+
+        System.out.println("MySQL JDBC Driver Registered!");
+
+
+        try {
+            con = DriverManager
+                    .getConnection("jdbc:mysql://localhost:3306/zipcode", "root", "root123");
+
+        } catch (SQLException e) {
+            System.out.println("Connection Failed! Check output console");
+            e.printStackTrace();
+            return null;
+        }
+
+        if (con != null) {
+            System.out.println("You made it, take control your database now!");
+        } else {
+            System.out.println("Failed to make connection!");
+        }
+
+        return con;
+        //makeTableIfNotExists();
+        // display first Record
+        //displayFirstRecord();
+    }
+
+    /**
+     * Inserts the record in the database
+     */
+    public void insert() throws SQLException {
+        // Create a statement object instance from the 
+        // connection
+        Statement stmt = con.createStatement();
+
+        // We are going to execute an insert statement. 
+        // First you have to create a table that has an 
+        // ID, NAME and ADDRESS field. For ID you can use 
+        // an auto number, while NAME and ADDRESS are 
+        // VARCHAR fields.
+        String sql = "INSERT INTO users (name, address) "
+                + "VALUES ('Foo Bar', 'Some Street')";
+
+        // Call an execute method in the statement object 
+        // and passed the sql or query string to it.
+        stmt.execute(sql);
+    }
+
+    /**
+     * Connect program to the database specified
+     *
+     * @param databaseName
+     * @param userName
+     * @param password
+     */
+    public void doConnect(String databaseName, String userName, String password) {
         System.out.println("-------- MySQL JDBC Connection Testing ------------");
         //Connection connection = null;
 
@@ -45,10 +111,11 @@ public class Workers extends javax.swing.JFrame {
 
         System.out.println("MySQL JDBC Driver Registered!");
 
+        final String finalConnectionString = CONNECTION_STRING + databaseName;
 
         try {
             con = DriverManager
-                    .getConnection("jdbc:mysql://localhost:3306/zipcode", "root", "root123");
+                    .getConnection(finalConnectionString, userName, password);
 
         } catch (SQLException e) {
             System.out.println("Connection Failed! Check output console");
@@ -426,7 +493,7 @@ public class Workers extends javax.swing.JFrame {
             rs.updateString("state", state);
             rs.updateString("latitude", latitude);
             rs.updateString("longitude", longitude);
-            
+
             rs.updateRow();
             JOptionPane.showMessageDialog(Workers.this, "Updated");
         } catch (SQLException err) {
