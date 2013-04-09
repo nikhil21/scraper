@@ -168,9 +168,6 @@ public class AmazonWebScraper implements IWebScraper {
             AmazonBookVO book = AmazonBookVO.create(bookName, author, sellerList);
             System.out.println("----------------------AmazonBookVO : "+book);
         }
-
-
-
         webClient.closeAllWindows();
     }
 }
