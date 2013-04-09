@@ -17,10 +17,13 @@ import java.util.List;
  */
 public class BookDTO {
     
+    String author;
+    String bookName;
+    List<SellerDTO> sellers = new ArrayList<SellerDTO>();
     
     @Override
     public String toString() {
-        return "AmazonBookVO{" + "author=" + author + ", bookName=" + bookName + ", sellers=" + sellers + '}';
+        return "AmazonBook{" + "author=" + author + ", bookName=" + bookName + ", sellers=" + sellers + '}';
     }
 
     public void setAuthor(String author) {
@@ -31,7 +34,7 @@ public class BookDTO {
         this.bookName = bookName;
     }
 
-    public void setSellers(List<SellerVO> sellers) {
+    public void setSellers(List<SellerDTO> sellers) {
         this.sellers = sellers;
     }
 
@@ -43,14 +46,10 @@ public class BookDTO {
         return bookName;
     }
 
-    public List<SellerVO> getSellers() {
+    public List<SellerDTO> getSellers() {
         return sellers;
     }
-    
-    String author;
-    String bookName;
-    List<SellerVO> sellers = new ArrayList<SellerVO>();
-    
+           
     public static void save(AmazonBookVO vo){
         
         // Code for insertion of records in the table

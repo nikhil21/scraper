@@ -2,14 +2,28 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.michael.webScraper.VO;
+package com.michael.webScraper;
 
 /**
  *
  * @author nikhil
  */
-public class SellerVO {
+public class SellerDTO {
+        
+    Integer id;   
+    String name;    
+    String rating;
+    String price;
+    String condition;
+        
+    public Integer getId() {
+        return id;
+    } 
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    
     public String getName() {
         return name;
     }
@@ -46,37 +60,5 @@ public class SellerVO {
     public String getCondition() {
         return condition;
     }
-    
-    Integer id;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getBook_id() {
-        return book_id;
-    }
-
-    public void setBook_id(Integer book_id) {
-        this.book_id = book_id;
-    }
-    Integer book_id;
-    String name;
-    String rating;
-    String price;
-    String condition;
-    
-    public static SellerVO create(String name, String rating, String price, String condition){
-        SellerVO vo = new SellerVO();
-        vo.name=name;
-        vo.rating=rating;
-        vo.price=price;
-        vo.condition=condition;
-        
-        return vo;
-    }
+       
 }

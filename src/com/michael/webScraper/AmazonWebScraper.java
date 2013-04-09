@@ -110,6 +110,13 @@ public class AmazonWebScraper implements IWebScraper {
 
         Iterator it = tbodyResultList.iterator();
 
+//        try{
+//          DatabaseUtil.establishDatabaseConnection();
+//          DatabaseUtil.initialize();
+//        } catch(Exception e){
+//            System.out.println ("Exception :::::::::"+e);
+//        }
+        
         while (it.hasNext()) {
             HtmlTableBody tableBodyElement = (HtmlTableBody) it.next();
             System.out.println("\n " + tableBodyElement);
@@ -158,15 +165,21 @@ public class AmazonWebScraper implements IWebScraper {
                     }
                 }
                 System.out.println("----------------------SellerVO : "+seller);
-                sellerList.add(seller);
+                sellerList.add(seller);                                        
             }
             HtmlElement elm = page.getHtmlElementById("olpProductByLine");
             String bookName  = elm.getPreviousElementSibling().asText().trim();
             String author  = elm.asText().trim();
             System.out.println("Book name :"+bookName);
             System.out.println("Author :"+author);
-            AmazonBookVO book = AmazonBookVO.create(bookName, author, sellerList);
-            System.out.println("----------------------AmazonBookVO : "+book);
+            AmazonBookVO book = AmazonBookVO.create(bookName, author, sellerList);          
+            System.out.println("----------------------AmazonBookVO : "+book);       
+            
+//            try{
+//                  DatabaseUtil.create(book);  
+//            } catch(Exception e){
+//                   System.out.println("Exception >>>>>>"+e); 
+//            }    
         }
         webClient.closeAllWindows();
     }

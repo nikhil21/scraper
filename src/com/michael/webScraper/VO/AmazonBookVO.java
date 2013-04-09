@@ -44,6 +44,15 @@ public class AmazonBookVO {
         return sellers;
     }
     
+    Integer id;
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return id;
+    }
     String author;
     String bookName;
     List<SellerVO> sellers = new ArrayList<SellerVO>();
