@@ -12,8 +12,10 @@ import com.gargoylesoftware.htmlunit.html.HtmlTableCell;
 import com.gargoylesoftware.htmlunit.html.HtmlTableRow;
 import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.HtmlImage;
 import com.michael.webScraper.VO.AmazonBookVO;
 import com.michael.webScraper.VO.SellerVO;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -35,6 +37,8 @@ public class AmazonWebScraper implements IWebScraper {
     private static final String amazonAllLink = "http://www.amazon.com/gp/offer-listing/059035342X/";
     // this is the url which we would append the ISBN no
     private static final String amazonBookFinalURL = "www.amazon.com/gp/offer-listing/";
+    private static final String altImageStr = "Return to product information";
+    private static final String imagePath = "/home/nikhil/NetBeansProjects/database_form/";
 
     @Override
     public void fetchDetails(String searchString) {
@@ -86,6 +90,30 @@ public class AmazonWebScraper implements IWebScraper {
         String isbnNo = div.getAttribute("name");
         webClient.closeAllWindows();
         return isbnNo;
+    }
+    
+    public void getImage(String isbnNo) throws IOException, URISyntaxException {
+        String finalURL = amazonBookFinalURL + isbnNo;
+        //String finalURL = "www.amazon.com/gp/offer-listing/059035342X/";
+        // now create the final URL
+        URIBuilder builder = new URIBuilder();
+        builder.setScheme("http").setHost(finalURL);
+        URI uri = builder.build();
+        System.out.println(">>>>>>>>>>>>" + uri.toString());
+
+        // fetch details
+        final WebClient webClient = new WebClient();
+        final HtmlPage page = webClient.getPage(uri.toString());
+
+        // now get the image
+        HtmlImage image = page.<HtmlImage>getFirstByXPath("//img[@alt='Return to product information']");
+        String imageLocation = imagePath + "image-"+ isbnNo +".jpg";
+        File imageFile = new File(imageLocation);
+        image.saveAs(imageFile);
+    }
+    
+    public String getImageLocation(String isbnNo) {     
+        return imagePath + "image-"+ isbnNo +".jpg"; 
     }
 
     public void showDetails(String isbnNo) throws URISyntaxException, IOException {
