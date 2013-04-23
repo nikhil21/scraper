@@ -17,7 +17,7 @@ public class AmazonBookVO {
 
     @Override
     public String toString() {
-        return "AmazonBookVO{" + "author=" + author + ", bookName=" + bookName + ", sellers=" + sellers + '}';
+        return "AmazonBookVO{" + "author=" + author + ", bookName=" + bookName + '}';
     }
 
     public void setAuthor(String author) {

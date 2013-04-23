@@ -1,0 +1,44 @@
+----------------------------------------------------------------------------------------------------
+Log start : 15/04/2013 17:46
+----------------------------------------------------------------------------------------------------
+AmazonBookVO{author=by J. K. Rowling, bookName=Harry Potter and the Sorcerer's Stone (Book 1) (Paperback)}
+SellerVO{name=owlsbooks, rating=93% positive, price=$4.00, condition=Used - Good}
+SellerVO{name=jenson_online_inc, rating=96% positive, price=$4.00, condition=Used - Acceptable}
+SellerVO{name=-bearbooks-, rating=95% positive, price=$4.00, condition=Used - Good}
+SellerVO{name=Silver Arch Books, rating=97% positive, price=$0.01, condition=Used - Acceptable}
+SellerVO{name=Yankee_Clipper_Books_, rating=96% positive, price=$0.01, condition=Used - Good}
+SellerVO{name=Free State Books, rating=96% positive, price=$0.01, condition=Used - Good}
+SellerVO{name=Goodwill of NNE, rating=98% positive, price=$0.01, condition=Used - Good}
+SellerVO{name=Goodwill Industries, rating=96% positive, price=$0.01, condition=Used - Acceptable}
+SellerVO{name=thrift_books, rating=97% positive, price=$0.01, condition=Used - Good}
+SellerVO{name=atlanta-book-company, rating=96% positive, price=$0.01, condition=Used - Good}
+SellerVO{name=Value Promenade, rating=95% positive, price=$0.01, condition=Used - Very Good}
+SellerVO{name=Sierra Nevada Books, rating=96% positive, price=$0.01, condition=Used - Acceptable}
+SellerVO{name=Blue Cloud Books, rating=96% positive, price=$0.01, condition=Used - Good}
+SellerVO{name=Books Squared, rating=97% positive, price=$0.01, condition=Used - Acceptable}
+SellerVO{name=green_earth_books, rating=97% positive, price=$0.01, condition=Used - Good}
+----------------------------------------------------------------------------------------------------
+Log end : 15/04/2013 17:46
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+Log start : 15/04/2013 18:03
+----------------------------------------------------------------------------------------------------
+AmazonBookVO{author=by J. K. Rowling, bookName=Harry Potter and the Sorcerer's Stone (Book 1) (Paperback)}
+SellerVO{name=owlsbooks, rating=93% positive, price=$4.00, condition=Used - Good}
+SellerVO{name=-bearbooks-, rating=95% positive, price=$4.00, condition=Used - Good}
+SellerVO{name=jenson_online_inc, rating=96% positive, price=$4.00, condition=Used - Acceptable}
+SellerVO{name=Books Squared, rating=97% positive, price=$0.01, condition=Used - Acceptable}
+SellerVO{name=atlanta-book-company, rating=96% positive, price=$0.01, condition=Used - Acceptable}
+SellerVO{name=Silver Arch Books, rating=97% positive, price=$0.01, condition=Used - Good}
+SellerVO{name=Blue Cloud Books, rating=96% positive, price=$0.01, condition=Used - Good}
+SellerVO{name=thrift_books, rating=97% positive, price=$0.01, condition=Used - Acceptable}
+SellerVO{name=super-fly-books, rating=96% positive, price=$0.01, condition=Used - Good}
+SellerVO{name=Sierra Nevada Books, rating=96% positive, price=$0.01, condition=Used - Acceptable}
+SellerVO{name=Yankee_Clipper_Books_, rating=96% positive, price=$0.01, condition=Used - Acceptable}
+SellerVO{name=massbookstore, rating=96% positive, price=$0.01, condition=Used - Very Good}
+SellerVO{name=audaciousabandon, rating=100% positive., price=$0.01, condition=Used - Very Good}
+SellerVO{name=green_earth_books, rating=97% positive, price=$0.01, condition=Used - Good}
+SellerVO{name=TheDealFactory, rating=95% positive, price=$0.01, condition=Used - Acceptable}
+----------------------------------------------------------------------------------------------------
+Log end : 15/04/2013 18:03
+----------------------------------------------------------------------------------------------------

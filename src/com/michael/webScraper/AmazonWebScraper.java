@@ -194,8 +194,10 @@ public class AmazonWebScraper implements IWebScraper {
               AmazonBookVO book = AmazonBookVO.create(bookName, author, sellerList);          
               System.out.println("AmazonBookVO : "+book);       
 
-              DatabaseUtil.create(book);    
-              
+              if(DatabaseUtil.create(book)){
+                  LogUtil.log(book);
+              }  
+                           
         } catch(Exception e){
             System.out.println ("Exception :"+e);
         } finally {
