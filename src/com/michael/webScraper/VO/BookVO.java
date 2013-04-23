@@ -5,19 +5,27 @@
 package com.michael.webScraper.VO;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
  *
  * This class is supposed to show the information we get after scraping the 
- * amazon web page.
+ * web page.
  * @author nikhil
  */
-public class AmazonBookVO {
+public class BookVO {
+    
+    Integer id;
+    String author;
+    String bookName;
+    String source;
+    Date scrapedDate;
+    List<SellerVO> sellers = new ArrayList<SellerVO>();
 
     @Override
     public String toString() {
-        return "AmazonBookVO{" + "author=" + author + ", bookName=" + bookName + '}';
+        return "BookVO{" + "author=" + author + ", bookName=" + bookName + ", source="+ source + ", scraedDate="+ scrapedDate + '}';
     }
 
     public void setAuthor(String author) {
@@ -44,8 +52,6 @@ public class AmazonBookVO {
         return sellers;
     }
     
-    Integer id;
-
     public void setId(Integer id) {
         this.id = id;
     }
@@ -53,12 +59,25 @@ public class AmazonBookVO {
     public Integer getId() {
         return id;
     }
-    String author;
-    String bookName;
-    List<SellerVO> sellers = new ArrayList<SellerVO>();
-    
-    public static AmazonBookVO create(String bookName, String author, List<SellerVO> sellers){
-        AmazonBookVO vo = new AmazonBookVO();
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public Date getScrapedDate() {
+        return scrapedDate;
+    }
+
+    public void setScrapedDate(Date scrapedDate) {
+        this.scrapedDate = scrapedDate;
+    }
+                  
+    public static BookVO create(String bookName, String author, List<SellerVO> sellers){
+        BookVO vo = new BookVO();
         vo.author=author;
         vo.bookName=bookName;
         vo.sellers=sellers;

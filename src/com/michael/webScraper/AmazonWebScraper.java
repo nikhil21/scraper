@@ -13,7 +13,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlTableRow;
 import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlImage;
-import com.michael.webScraper.VO.AmazonBookVO;
+import com.michael.webScraper.VO.BookVO;
 import com.michael.webScraper.VO.SellerVO;
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.client.utils.URIUtils;
 
 /**
  *
@@ -38,7 +37,7 @@ public class AmazonWebScraper implements IWebScraper {
     // this is the url which we would append the ISBN no
     private static final String amazonBookFinalURL = "www.amazon.com/gp/offer-listing/";
     private static final String altImageStr = "Return to product information";
-    private static final String imagePath = "/home/nikhil/NetBeansProjects/database_form/";
+    private static final String imagePath = "C:\\Users\\Shweta\\Work\\myspace\\projects\\OtherProjects\\scraper";
 
     @Override
     public void fetchDetails(String searchString) {
@@ -191,10 +190,10 @@ public class AmazonWebScraper implements IWebScraper {
               String author  = elm.asText().trim();
               System.out.println("Book name :"+bookName);
               System.out.println("Author :"+author);
-              AmazonBookVO book = AmazonBookVO.create(bookName, author, sellerList);          
+              BookVO book = BookVO.create(bookName, author, sellerList);          
               System.out.println("AmazonBookVO : "+book);       
 
-              if(DatabaseUtil.create(book)){
+              if(DatabaseUtil.create(book, Source.AMAZON)){
                   LogUtil.log(book);
               }  
                            

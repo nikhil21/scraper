@@ -241,6 +241,10 @@ public class WebpageReaderWithAgent extends javax.swing.JFrame {
             picLabel.setIcon(imageIcon);
             //fetchData(resUrl);
             
+            //ABE.com
+            AbeWebScraper abe = new AbeWebScraper();
+            abe.showDetails(isbnNo);
+            
         } catch(Exception e) {
             System.out.println("Exception Caught !!");
         }        

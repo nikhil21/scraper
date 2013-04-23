@@ -4,17 +4,16 @@
  */
 package com.michael.webScraper;
 
-import com.michael.webScraper.VO.AmazonBookVO;
+import com.michael.webScraper.VO.BookVO;
 import com.michael.webScraper.VO.SellerVO;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.sql.Timestamp;
+import java.util.Date;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
@@ -34,7 +33,7 @@ public class DatabaseUtil {
             String dbName = "zipcode";
             String driver = "com.mysql.jdbc.Driver";
             String userName = "root";
-            String password = "";
+            String password = "root123";
 
             Class.forName(driver).newInstance();
             conn = DriverManager.getConnection(url + dbName, userName, password);
@@ -55,7 +54,9 @@ public class DatabaseUtil {
             query = "create table book "
                     + "(id INT NOT NULL,"
                     + "book_name varchar(500),"
-                    + "author varchar(500)"
+                    + "author varchar(500),"
+                    + "source varchar(500),"
+                    + "scraped_date timestamp"
                     + ");";
             stmt.execute(query);
         } catch (SQLException ex) {
@@ -95,7 +96,7 @@ public class DatabaseUtil {
         
     }
     
-    public static boolean create(AmazonBookVO book){
+    public static boolean create(BookVO book, Source source){
         boolean done = false;
         Integer book_id;
         Integer seller_id;
@@ -106,10 +107,12 @@ public class DatabaseUtil {
                 
             // PreparedStatements can use variables and are more efficient
             preparedStatement = conn
-              .prepareStatement("insert into  book values (?, ?, ?)");
+              .prepareStatement("insert into  book values (?, ?, ?, ?, ?)");
             preparedStatement.setInt(1, book_id);
             preparedStatement.setString(2, StringEscapeUtils.escapeEcmaScript(book.getBookName()));
             preparedStatement.setString(3, StringEscapeUtils.escapeEcmaScript(book.getAuthor()));
+            preparedStatement.setString(4, StringEscapeUtils.escapeEcmaScript(source.getValue()));
+            preparedStatement.setTimestamp(5, new Timestamp(new Date().getTime()));
 
             preparedStatement.executeUpdate();
             
@@ -143,7 +146,7 @@ public class DatabaseUtil {
             } catch (SQLException ex1) {
                 System.out.println("Exception at rollback : "+ex1);
             }
-        }                 
+        }                
         return done;
     }
     

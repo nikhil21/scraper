@@ -5,10 +5,11 @@
 package com.michael.webScraper;
 
 import Employees.Workers;
-import com.michael.webScraper.VO.AmazonBookVO;
+import com.michael.webScraper.VO.BookVO;
 import com.michael.webScraper.VO.SellerVO;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,11 +20,13 @@ public class BookDTO {
     
     String author;
     String bookName;
+    String source;
+    Date scrapedDate;
     List<SellerDTO> sellers = new ArrayList<SellerDTO>();
     
     @Override
     public String toString() {
-        return "AmazonBook{" + "author=" + author + ", bookName=" + bookName + ", sellers=" + sellers + '}';
+        return "BookDTO{" + "author=" + author + ", bookName=" + bookName + ", source="+ source + ", scraedDate="+ scrapedDate + '}';
     }
 
     public void setAuthor(String author) {
@@ -49,14 +52,20 @@ public class BookDTO {
     public List<SellerDTO> getSellers() {
         return sellers;
     }
-           
-    public static void save(AmazonBookVO vo){
-        
-        // Code for insertion of records in the table
-        List<SellerVO> sellers = vo.getSellers();  
-        
-        //Connection con = new Workers().doConnect(databaseName, userName, password);
-              
+
+    public String getSource() {
+        return source;
     }
-    
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public Date getScrapedDate() {
+        return scrapedDate;
+    }
+
+    public void setScrapedDate(Date scrapedDate) {
+        this.scrapedDate = scrapedDate;
+    }  
 }

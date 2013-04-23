@@ -4,7 +4,7 @@
  */
 package com.michael.webScraper;
 
-import com.michael.webScraper.VO.AmazonBookVO;
+import com.michael.webScraper.VO.BookVO;
 import com.michael.webScraper.VO.SellerVO;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -27,7 +27,7 @@ public class LogUtil {
     public static BufferedWriter log = null;
     public static File file = null;
     
-    public static boolean log(AmazonBookVO book){
+    public static boolean log(BookVO book){
         boolean done =  true;
         try {
             readErrorLogFile();
@@ -56,6 +56,8 @@ public class LogUtil {
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
             URL url = classLoader.getResource("");
             System.out.println(">>>>>>>>>>"+url.getPath());
+            FILE_PATH=url.getPath();
+            
             
             file = new File(FILE_PATH + File.separator + LOG_FILE);
             log = new BufferedWriter(new FileWriter(file, true));
@@ -76,7 +78,6 @@ public class LogUtil {
             for(int i=0; i<100;i++) header.append("-");
             header.append("\n");
             log.write(header.toString());
-            header.append("\n");
         } catch (Exception e) {
             System.out.println("Exception at writing header in  log file : " + e);
         }
@@ -94,7 +95,6 @@ public class LogUtil {
             for(int i=0; i<100;i++) footer.append("-");
             footer.append("\n");
             log.write(footer.toString());
-            footer.append("\n");
         } catch (Exception e) {
             System.out.println("Exception at writing footer in log file : " + e);
         }
