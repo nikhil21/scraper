@@ -59,9 +59,9 @@ public class AmazonWebScraper implements IWebScraper {
                 .setParameter("sprefix", searchString)
                 .setParameter("rh", searchString);
         URI uri = builder.build();
-        System.out.println(">>>>>>>>>>>>" + uri.toString());
+        System.out.println("Found URL : " + uri.toString());
         String newStr = uri.toString().replaceFirst("%25", "%");
-        System.out.println("<><><><><> " + newStr);
+        System.out.println("Modified URL : " + newStr);
         return newStr;
     }
 
@@ -73,20 +73,12 @@ public class AmazonWebScraper implements IWebScraper {
      */
     public String findISBNNo(String url) throws IOException {
         final WebClient webClient = new WebClient();
-        //      final HtmlPage page = webClient.getPage("http://www.amazon.com/s/ref=nb_sb_ss_i_3_10?url=search-alias%3Dstripbooks&field-keywords=harry+potter+and+the+sorcerer%27s+stone&sprefix=harry+pott%2Cstripbooks%2C1159");
-        //Assert.assertEquals("HtmlUnit - Welcome to HtmlUnit", page.getTitleText());
         final HtmlPage page = webClient.getPage(url);
         final String pageAsXml = page.asXml();
-        //Assert.assertTrue(pageAsXml.contains("<body class=\"composite\">"));
-
         final String pageAsText = page.asText();
-        //Assert.assertTrue(pageAsText.contains("Support for the HTTP and HTTPS protocols"));
-
-
         final HtmlDivision div = page.getHtmlElementById("result_0");
-        //System.out.println(">>>>> "+div.getFirstChild().asText());
-        System.out.println("Div found .. " + div.getAttribute("name"));
-        //final HtmlAnchor anchor = page.getAnchorByName("anchor_name");
+        System.out.println("Div found : " + div.getAttribute("name"));
+
         String isbnNo = div.getAttribute("name");
         webClient.closeAllWindows();
         return isbnNo;
@@ -123,7 +115,7 @@ public class AmazonWebScraper implements IWebScraper {
         URIBuilder builder = new URIBuilder();
         builder.setScheme("http").setHost(finalURL);
         URI uri = builder.build();
-        System.out.println(">>>>>>>>>>>>" + uri.toString());
+        System.out.println("URL found :" + uri.toString());
 
         // fetch details
         final WebClient webClient = new WebClient();
@@ -138,78 +130,78 @@ public class AmazonWebScraper implements IWebScraper {
 
         Iterator it = tbodyResultList.iterator();
 
-//        try{
-//          DatabaseUtil.establishDatabaseConnection();
-//          DatabaseUtil.initialize();
-//        } catch(Exception e){
-//            System.out.println ("Exception :::::::::"+e);
-//        }
-        
-        while (it.hasNext()) {
-            HtmlTableBody tableBodyElement = (HtmlTableBody) it.next();
-            System.out.println("\n " + tableBodyElement);
-            // get the table rows
-            List<HtmlTableRow> tableRows = tableBodyElement.getRows();
-            // now get the iterator on table row          
+        try{
+          DatabaseUtil.establishDatabaseConnection();
+          DatabaseUtil.initialize();
+          
+          List<SellerVO> sellerList = new ArrayList<SellerVO>();
+          while (it.hasNext()) {
+                  HtmlTableBody tableBodyElement = (HtmlTableBody) it.next();
+                  System.out.println("\n " + tableBodyElement);
+                  // get the table rows
+                  List<HtmlTableRow> tableRows = tableBodyElement.getRows();
+                  // now get the iterator on table row          
+
+                  String className ;         
+                  SellerVO seller;
+                  for (HtmlTableRow row : tableBodyElement.getRows()) {
+                      System.out.println("------------------ Next Row -----------------");
+                      seller = new SellerVO();
+                      for (HtmlTableCell cell : row.getCells()) {
+                          for(DomElement element : cell.getChildElements()){
+                              className = element.getAttribute("class");
+                              if(className.equalsIgnoreCase("price")){
+                                  System.out.println("Found Price : "+element.asText());
+                                  seller.setPrice(element.asText().trim());
+                              } else if(className.equalsIgnoreCase("condition")){
+                                  System.out.println("Found Condition : "+element.asText());
+                                  seller.setCondition(element.asText().trim());
+                              } else if(className.equalsIgnoreCase("sellerInformation")){
+                                  for(DomElement child1 : element.getChildElements()){
+                                     for(DomElement child2 : child1.getChildElements()){                                   
+                                         if(child2.getAttribute("class").equalsIgnoreCase("seller")){
+                                             for(DomElement child3 : child2.getChildElements()){
+                                                  if(!child3.getAttribute("class").equalsIgnoreCase("sellerHeader")){
+                                                      System.out.println("Found Seller : "+child3.asText());
+                                                      seller.setName(child3.asText().trim());
+                                                  }   
+                                             }
+                                         } else if(child2.getAttribute("class").equalsIgnoreCase("rating")){
+                                             for(DomElement child3 : child2.getChildElements()){
+                                                  if(!child3.getAttribute("class").equalsIgnoreCase("ratingHeader") || !child3.getAttribute("class").equalsIgnoreCase("olpSellerStars")){
+                                                      if(child3.getId().startsWith("rating")){
+                                                          System.out.println("Found Rating : "+child3.asText());
+                                                          seller.setRating(child3.asText().trim());                                               
+                                                      }                                                
+                                                   }   
+                                             }
+                                         }                        
+                                      }
+                                   } 
+                              }   
+                          }
+                      }
+                      System.out.println("SellerVO : "+seller);
+                      sellerList.add(seller);                                        
+                  }
+              }
+                
+              HtmlElement elm = page.getHtmlElementById("olpProductByLine");
+              String bookName  = elm.getPreviousElementSibling().asText().trim();
+              String author  = elm.asText().trim();
+              System.out.println("Book name :"+bookName);
+              System.out.println("Author :"+author);
+              AmazonBookVO book = AmazonBookVO.create(bookName, author, sellerList);          
+              System.out.println("AmazonBookVO : "+book);       
+
+              DatabaseUtil.create(book);    
+              
+        } catch(Exception e){
+            System.out.println ("Exception :"+e);
+        } finally {
+            webClient.closeAllWindows(); 
             
-            List<SellerVO> sellerList = new ArrayList<SellerVO>();
-            String className ;         
-            SellerVO seller;
-            for (HtmlTableRow row : tableBodyElement.getRows()) {
-                System.out.println("Nexttttttttttttttttttttttttttttttt row");
-                seller = new SellerVO();
-                for (HtmlTableCell cell : row.getCells()) {
-                    for(DomElement element : cell.getChildElements()){
-                        className = element.getAttribute("class");
-                        if(className.equalsIgnoreCase("price")){
-                            System.out.println(">>>>>>>>>>>Found Price : "+element.asText());
-                            seller.setPrice(element.asText().trim());
-                        } else if(className.equalsIgnoreCase("condition")){
-                            System.out.println(">>>>>>>>>>>Found Condition : "+element.asText());
-                            seller.setCondition(element.asText().trim());
-                        } else if(className.equalsIgnoreCase("sellerInformation")){
-                            for(DomElement child1 : element.getChildElements()){
-                               for(DomElement child2 : child1.getChildElements()){                                   
-                                   if(child2.getAttribute("class").equalsIgnoreCase("seller")){
-                                       for(DomElement child3 : child2.getChildElements()){
-                                            if(!child3.getAttribute("class").equalsIgnoreCase("sellerHeader")){
-                                                System.out.println(">>>>>>>>>>>Found Seller : "+child3.asText());
-                                                seller.setName(child3.asText().trim());
-                                            }   
-                                       }
-                                   } else if(child2.getAttribute("class").equalsIgnoreCase("rating")){
-                                       for(DomElement child3 : child2.getChildElements()){
-                                            if(!child3.getAttribute("class").equalsIgnoreCase("ratingHeader") || !child3.getAttribute("class").equalsIgnoreCase("olpSellerStars")){
-                                                if(child3.getId().startsWith("rating")){
-                                                    System.out.println(">>>>>>>>>>>Found Rating : "+child3.asText());
-                                                    seller.setRating(child3.asText().trim());                                               
-                                                }                                                
-                                             }   
-                                       }
-                                   }                        
-                                }
-                             } 
-                        }   
-                    }
-                }
-                System.out.println("----------------------SellerVO : "+seller);
-                sellerList.add(seller);                                        
-            }
-            HtmlElement elm = page.getHtmlElementById("olpProductByLine");
-            String bookName  = elm.getPreviousElementSibling().asText().trim();
-            String author  = elm.asText().trim();
-            System.out.println("Book name :"+bookName);
-            System.out.println("Author :"+author);
-            AmazonBookVO book = AmazonBookVO.create(bookName, author, sellerList);          
-            System.out.println("----------------------AmazonBookVO : "+book);       
-            
-            try{
-                  DatabaseUtil.initialize();
-                  DatabaseUtil.create(book);  
-            } catch(Exception e){
-                   System.out.println("Exception >>>>>>"+e); 
-            }    
-        }
-        webClient.closeAllWindows();
+            DatabaseUtil.finish();
+        }      
     }
 }

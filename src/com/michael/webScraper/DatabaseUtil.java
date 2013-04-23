@@ -6,6 +6,7 @@ package com.michael.webScraper;
 
 import com.michael.webScraper.VO.AmazonBookVO;
 import com.michael.webScraper.VO.SellerVO;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -33,7 +34,7 @@ public class DatabaseUtil {
             String dbName = "zipcode";
             String driver = "com.mysql.jdbc.Driver";
             String userName = "root";
-            String password = "root123";
+            String password = "";
 
             Class.forName(driver).newInstance();
             conn = DriverManager.getConnection(url + dbName, userName, password);
@@ -67,13 +68,31 @@ public class DatabaseUtil {
                     + "book_id INT NOT NULL,"
                     + "name varchar(100),"
                     + "book_condition varchar(100),"
-                    + "price DECIMAL(8,2),"
-                    + "rating DECIMAL(8,2)"
+                    + "price varchar(100),"
+                    + "rating varchar(100)"
                     + ");";
             stmt.execute(query);
         } catch (SQLException ex) {
             System.out.println("Exception at creating seller table : "+ ex);
         }        
+    }
+    
+    public static void done(){
+        try {
+            conn.commit();
+        } catch (SQLException ex) {
+            System.out.println("Exception at commiting : "+ ex);
+        }
+    }
+    
+    public static void finish(){
+        try {
+            stmt.close();
+            conn.close();
+        } catch (SQLException ex) {
+            System.out.println("Exception at disconnecting : "+ ex);
+        }
+        
     }
     
     public static boolean create(AmazonBookVO book){
@@ -83,55 +102,46 @@ public class DatabaseUtil {
         try {
             query = "select max(id)+1 from book";
             book_id = getId(query, 1); 
-            System.out.println("Book ID is ***** "+book_id);
-            System.out.println("Book name is ***** "+book.getBookName());
-            System.out.println("Escaped name is ***** "+StringEscapeUtils.escapeEcmaScript(book.getBookName()));
-//            query = "insert into book values "
-//                + "(id, book_name, author) "
-//                + "("+book_id+", "
-//                    +"'"+StringEscapeUtils.escapeEcmaScript(book.getBookName())+"'"+", "
-//                    +"'"+StringEscapeUtils.escapeEcmaScript(book.getAuthor())+"'"+");";
-//            stmt.execute(query);
-            
+            System.out.println("New Book ID : "+book_id);
+                
             // PreparedStatements can use variables and are more efficient
-        preparedStatement = conn
-          .prepareStatement("insert into  book values (?, ?, ?)");
-      // "myuser, webpage, datum, summery, COMMENTS from FEEDBACK.COMMENTS");
-      // Parameters start with 1
-        preparedStatement.setInt(1, book_id);
-        preparedStatement.setString(2, StringEscapeUtils.escapeEcmaScript(book.getBookName()));
-        preparedStatement.setString(3, StringEscapeUtils.escapeEcmaScript(book.getAuthor()));
-        
-        preparedStatement.executeUpdate();
-      
-      
-            System.out.println("Inserted row into book : "+book_id);
+            preparedStatement = conn
+              .prepareStatement("insert into  book values (?, ?, ?)");
+            preparedStatement.setInt(1, book_id);
+            preparedStatement.setString(2, StringEscapeUtils.escapeEcmaScript(book.getBookName()));
+            preparedStatement.setString(3, StringEscapeUtils.escapeEcmaScript(book.getAuthor()));
+
+            preparedStatement.executeUpdate();
+            
+            System.out.println("Inserted a row into book : "+book_id);
             
             for(SellerVO seller : book.getSellers()){
-                query = "select max(id)+1 from seller";
+                 query = "select max(id)+1 from seller";
                  seller_id = getId(query, 1); 
+                 System.out.println("New Seller ID : "+seller_id);
+               
+                  preparedStatement = conn
+                    .prepareStatement("insert into  seller values (?, ?, ?, ?, ?, ?)");
+                  preparedStatement.setInt(1, seller_id);
+                  preparedStatement.setInt(2, book_id);
+                  preparedStatement.setString(3, StringEscapeUtils.escapeEcmaScript(seller.getName()));
+                  preparedStatement.setString(4, StringEscapeUtils.escapeEcmaScript(seller.getCondition()));
+                  preparedStatement.setString(5, StringEscapeUtils.escapeEcmaScript(seller.getRating()));
+                  preparedStatement.setString(6, StringEscapeUtils.escapeEcmaScript(seller.getPrice()));
 
-                 query = "insert into seller values "
-                     + "(id, book_id, name, book_condition, rating, price) "
-                     + "("+seller_id
-                         +", "+book_id
-                         +", "+seller.getName()
-                         +", "+seller.getCondition()
-                         +", "+seller.getRating()
-                         +", "+seller.getPrice()
-                         +");";
-                 stmt.execute(query);
-                 System.out.println("Inserted row into seller : "+seller_id);
+                  preparedStatement.executeUpdate();
+                 System.out.println("Inserted a row into seller : "+seller_id);
            }
            done = true; 
-           conn.commit();
+           
+           //commit
+           done();
         } catch (SQLException ex) {
             System.out.println("Exception at inserting into tables : "+ ex);
             try {
                 conn.rollback();
             } catch (SQLException ex1) {
-                Logger.getLogger(DatabaseUtil.class.getName()).log(Level.SEVERE, null, ex1);
-                System.out.println("Caught Exception.. "+ex1);
+                System.out.println("Exception at rollback : "+ex1);
             }
         }                 
         return done;
@@ -148,7 +158,7 @@ public class DatabaseUtil {
             System.out.println("Exception at fetching id : " + e);
         }
 
-        return id;
+        return (id<1)?1:id;
     }
     
 }

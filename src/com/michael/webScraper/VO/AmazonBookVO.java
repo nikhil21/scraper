@@ -57,7 +57,7 @@ public class AmazonBookVO {
     String bookName;
     List<SellerVO> sellers = new ArrayList<SellerVO>();
     
-    public static AmazonBookVO create(String author, String bookName, List<SellerVO> sellers){
+    public static AmazonBookVO create(String bookName, String author, List<SellerVO> sellers){
         AmazonBookVO vo = new AmazonBookVO();
         vo.author=author;
         vo.bookName=bookName;
