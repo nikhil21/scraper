@@ -59,8 +59,13 @@ public class AbeWebScraper implements IWebScraper {
           List<SellerVO> sellerList = new ArrayList<SellerVO>();
           while (it.hasNext()) {
                   HtmlDivision divElement = (HtmlDivision) it.next();
-                  System.out.println("Div 1: " + divElement);
-                  System.out.println("Div 2: " +divElement.getElementsByAttribute("div", "class", "result-data"));
+                  System.out.println("Author : " +divElement.getElementsByAttribute("div", "class", "author").get(0).asText());
+                  System.out.println("price : " +divElement.getElementsByAttribute("div", "class", "item-price").get(1).asText());
+                  System.out.println("qunanity : " +divElement.getElementsByAttribute("div", "class", "quantity").get(0).asText());
+//                  System.out.println("condition : " +divElement.getElementsByAttribute("div", "class", "quantity").get(0).asText());
+//                  System.out.println("rating : " +divElement.getElementsByAttribute("div", "class", "quantity").get(0).asText());
+
+
                   String className ;         
                   SellerVO seller;
 //                  for (HtmlTableRow row : tableBodyElement.getRows()) {
