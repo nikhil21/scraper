@@ -13,18 +13,36 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  *
- * @author Shweta
+ * @author 
  */
 public class DatabaseUtil {
     public static Connection conn= null;
     public static Statement stmt=null;
     public static String query="";
     private static PreparedStatement preparedStatement = null;
+    
+    public static ArrayList<SellerVO> getAllSellers(String query) {
+        ArrayList<SellerVO> sellers = new ArrayList<SellerVO>();
+        try {
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                SellerVO seller = new SellerVO();
+                seller.setName(rs.getString("name"));
+                seller.setPrice(rs.getString("price"));
+                seller.setRating(rs.getString("rating"));
+                sellers.add(seller);
+            }
+        } catch (Exception e) {
+            System.out.println("Exception at fetching id : " + e);
+        }
+        return sellers;
+    }
     
     public static void establishDatabaseConnection(){
         System.out.println("Checking the connection to the DB..");
@@ -129,8 +147,8 @@ public class DatabaseUtil {
                   preparedStatement.setInt(2, book_id);
                   preparedStatement.setString(3, StringEscapeUtils.escapeEcmaScript(seller.getName()));
                   preparedStatement.setString(4, StringEscapeUtils.escapeEcmaScript(seller.getCondition()));
-                  preparedStatement.setString(5, StringEscapeUtils.escapeEcmaScript(seller.getRating()));
-                  preparedStatement.setString(6, StringEscapeUtils.escapeEcmaScript(seller.getPrice()));
+                  preparedStatement.setString(5, StringEscapeUtils.escapeEcmaScript(seller.getPrice()));
+                  preparedStatement.setString(6, StringEscapeUtils.escapeEcmaScript(seller.getRating()));
 
                   preparedStatement.executeUpdate();
                  System.out.println("Inserted a row into seller : "+seller_id);

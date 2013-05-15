@@ -6,7 +6,7 @@ package com.michael.webScraper;
 
 /**
  *
- * @author Shweta
+ * @author 
  */
 public enum Source {
 

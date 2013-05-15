@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  *
- * @author nikhil
+ * @author 
  */
 public class BookDTO {
     

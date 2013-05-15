@@ -19,7 +19,7 @@ import org.apache.http.client.utils.URIBuilder;
 
 /**
  *
- * @author shweta
+ * @author 
  */
 public class AbeWebScraper implements IWebScraper {
 

@@ -6,7 +6,7 @@ package com.michael.webScraper;
 
 /**
  *
- * @author nikhil
+ * @author 
  */
 public class SellerDTO {
         

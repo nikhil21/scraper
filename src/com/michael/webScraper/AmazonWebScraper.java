@@ -26,7 +26,7 @@ import org.apache.http.client.utils.URIBuilder;
 
 /**
  *
- * @author nikhil
+ * @author 
  */
 public class AmazonWebScraper implements IWebScraper {
 
@@ -37,7 +37,8 @@ public class AmazonWebScraper implements IWebScraper {
     // this is the url which we would append the ISBN no
     private static final String amazonBookFinalURL = "www.amazon.com/gp/offer-listing/";
     private static final String altImageStr = "Return to product information";
-    private static final String imagePath = "C:\\Users\\Shweta\\Work\\myspace\\projects\\OtherProjects\\scraper";
+    //private static final String imagePath = "C:\\Users\\Shweta\\Work\\myspace\\projects\\OtherProjects\\scraper";
+    private static final String imagePath = ".";
 
     @Override
     public void fetchDetails(String searchString) {
