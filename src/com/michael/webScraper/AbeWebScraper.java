@@ -108,7 +108,7 @@ public class AbeWebScraper implements IWebScraper {
     }
     
     public static String stripData(String value) {
-        if(value != null || value.isEmpty()) {
+        /*if(value != null || value.isEmpty()) {
             return null;
         }
         /*String value = "
@@ -121,7 +121,7 @@ public class AbeWebScraper implements IWebScraper {
 
 
         ";*/
-        try {
+        /*try {
             
         value = value.trim();
         String values [] = value.split(",");
@@ -133,7 +133,21 @@ public class AbeWebScraper implements IWebScraper {
             System.out.println("Does Not Have Zip .. ");
                    
         return null;
+        }*/
+        try {
+            
+        
+        String values [] = value.split(",");
+	System.out.println("Values 0 "+values[0]);
+	System.out.println("Values 1 "+values[1].trim());
+        System.out.println("Values 2 "+values[2]);
+        return values[1].trim();
+        } catch(Exception e) {
+            System.out.println("Does Not Have Zip .. ");
+                   
+        return null;
         }
+               
         
     }
 }

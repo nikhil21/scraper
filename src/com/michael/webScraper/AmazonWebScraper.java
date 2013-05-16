@@ -183,7 +183,7 @@ public class AmazonWebScraper implements IWebScraper {
                       }
                       
                       // Scrape the amazon zipcode as well
-                      String value= null;
+                 /*     String value= null;
                       //get list of all tbody elements which has class as "availability"
                       final List<?> resultList = page.getByXPath("//div[@class='availability']");
                       Iterator ait = resultList.iterator();
@@ -193,7 +193,7 @@ public class AmazonWebScraper implements IWebScraper {
                           // now pass the text and get the state if there is any otherwise NULL
                           value = divElement.getElementsByAttribute("div", "class", "availability").get(0).asText();
                           value = stripData(value);
-                      }
+                      } */
                       System.out.println("SellerVO : "+seller);
                       sellerList.add(seller);                                        
                   }
