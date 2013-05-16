@@ -6,6 +6,7 @@ package com.michael.webScraper;
 
 import com.michael.webScraper.VO.BookVO;
 import com.michael.webScraper.VO.SellerVO;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -36,12 +37,48 @@ public class DatabaseUtil {
                 seller.setName(rs.getString("name"));
                 seller.setPrice(rs.getString("price"));
                 seller.setRating(rs.getString("rating"));
+                seller.setZip_location(rs.getString("zip_location"));
                 sellers.add(seller);
             }
         } catch (Exception e) {
             System.out.println("Exception at fetching id : " + e);
         }
         return sellers;
+    }
+    
+    public static ZipCodeVO getZipCodeDetailsFromName(String zipCity) {
+        if(zipCity == null || zipCity.isEmpty() || zipCity.length() !=2) {
+            return null;
+        }
+        establishDatabaseConnection();
+        ZipCodeVO zipCodeVO = new ZipCodeVO();
+        try {
+            //query = "select * from zipcodes where state = "+zipCity+" limit 1";
+            //ResultSet rs = stmt.executeQuery(query);
+            
+            preparedStatement = conn.prepareStatement(
+                "Select * from zipcodes where state = ? limit 1");
+
+                preparedStatement.setString(1, zipCity);                
+                ResultSet rs = preparedStatement.executeQuery();
+                if(rs.next()) {
+                    zipCodeVO.setLatitude(new BigDecimal(rs.getString("latitude")));
+                    zipCodeVO.setLongitude(new BigDecimal(rs.getString("longitude")));
+                } 
+                else {
+                    System.out.println("No Record, for zipcity "+zipCity+", so returning null");
+                    return null;
+                }
+            System.out.println("Returning from zipcity "+zipCity+"lat>> "+rs.getString("latitude")
+                    +"and long >> "+rs.getString("longitude"));
+        
+        } catch (SQLException ex) {
+            System.out.println("Exception at creating book table : "+ ex);
+        } finally {
+            finish();
+        }
+        
+            return zipCodeVO;
     }
     
     public static void establishDatabaseConnection(){
@@ -88,7 +125,8 @@ public class DatabaseUtil {
                     + "name varchar(100),"
                     + "book_condition varchar(100),"
                     + "price varchar(100),"
-                    + "rating varchar(100)"
+                    + "rating varchar(100),"
+                    + "zip_location varchar(100)"
                     + ");";
             stmt.execute(query);
         } catch (SQLException ex) {
@@ -142,13 +180,14 @@ public class DatabaseUtil {
                  System.out.println("New Seller ID : "+seller_id);
                
                   preparedStatement = conn
-                    .prepareStatement("insert into  seller values (?, ?, ?, ?, ?, ?)");
+                    .prepareStatement("insert into  seller values (?, ?, ?, ?, ?, ?, ?)");
                   preparedStatement.setInt(1, seller_id);
                   preparedStatement.setInt(2, book_id);
                   preparedStatement.setString(3, StringEscapeUtils.escapeEcmaScript(seller.getName()));
                   preparedStatement.setString(4, StringEscapeUtils.escapeEcmaScript(seller.getCondition()));
                   preparedStatement.setString(5, StringEscapeUtils.escapeEcmaScript(seller.getPrice()));
                   preparedStatement.setString(6, StringEscapeUtils.escapeEcmaScript(seller.getRating()));
+                  preparedStatement.setString(7, StringEscapeUtils.escapeEcmaScript(seller.getZip_location()));
 
                   preparedStatement.executeUpdate();
                  System.out.println("Inserted a row into seller : "+seller_id);

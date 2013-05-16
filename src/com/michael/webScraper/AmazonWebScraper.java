@@ -181,6 +181,19 @@ public class AmazonWebScraper implements IWebScraper {
                               }   
                           }
                       }
+                      
+                      // Scrape the amazon zipcode as well
+                      String value= null;
+                      //get list of all tbody elements which has class as "availability"
+                      final List<?> resultList = page.getByXPath("//div[@class='availability']");
+                      Iterator ait = resultList.iterator();
+                      HtmlDivision divElement;
+                      while (ait.hasNext()) {
+                          divElement = (HtmlDivision) ait.next();
+                          // now pass the text and get the state if there is any otherwise NULL
+                          value = divElement.getElementsByAttribute("div", "class", "availability").get(0).asText();
+                          value = stripData(value);
+                      }
                       System.out.println("SellerVO : "+seller);
                       sellerList.add(seller);                                        
                   }
@@ -205,5 +218,23 @@ public class AmazonWebScraper implements IWebScraper {
             
             DatabaseUtil.finish();
         }      
+    }
+    
+    public static String stripData(String value) {
+        //String value = "(Red Lion, PA, U.S.A.)";
+        try {
+            
+        
+        String values [] = value.split(",");
+	System.out.println("Values 0 "+values[0]);
+	System.out.println("Values 1 "+values[1].trim());
+        System.out.println("Values 2 "+values[2]);
+        return values[1].trim();
+        } catch(Exception e) {
+            System.out.println("Does Not Have Zip .. ");
+                   
+        return null;
+        }
+        
     }
 }

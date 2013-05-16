@@ -6,7 +6,7 @@ package com.michael.webScraper.VO;
 
 /**
  *
- * @author nikhil
+ * @author 
  */
 public class SellerVO {
 
@@ -61,6 +61,14 @@ public class SellerVO {
         return book_id;
     }
 
+    public String getZip_location() {
+        return zip_location;
+    }
+
+    public void setZip_location(String zip_location) {
+        this.zip_location = zip_location;
+    }
+
     public void setBook_id(Integer book_id) {
         this.book_id = book_id;
     }
@@ -69,6 +77,7 @@ public class SellerVO {
     String rating;
     String price;
     String condition;
+    String zip_location;
     
     public static SellerVO create(String name, String rating, String price, String condition){
         SellerVO vo = new SellerVO();

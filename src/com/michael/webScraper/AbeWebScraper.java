@@ -81,6 +81,12 @@ public class AbeWebScraper implements IWebScraper {
               System.out.println("rating : " +value);
               seller.setRating(value);
               
+              value = divElement.getElementsByAttribute("div", "class", "bookseller-location").get(0).asText();
+              System.out.println("Full location : " +value);
+              value = stripData(value);
+              System.out.println("Striped location : " +value);
+              seller.setZip_location(value);
+              
               System.out.println("SellerVO : "+seller);
               sellerList.add(seller);                                        
               }
@@ -99,5 +105,35 @@ public class AbeWebScraper implements IWebScraper {
             
             DatabaseUtil.finish();
         }      
+    }
+    
+    public static String stripData(String value) {
+        if(value != null || value.isEmpty()) {
+            return null;
+        }
+        /*String value = "
+        In Stock. 
+
+
+            Ships from AL, United States.
+
+            Expedited shipping available.
+
+
+        ";*/
+        try {
+            
+        value = value.trim();
+        String values [] = value.split(",");
+	System.out.println("Values 0 "+values[0]);
+	System.out.println("Values 1 "+values[1].trim());
+        System.out.println("Values 2 "+values[2]);
+        return values[1].trim();
+        } catch(Exception e) {
+            System.out.println("Does Not Have Zip .. ");
+                   
+        return null;
+        }
+        
     }
 }
