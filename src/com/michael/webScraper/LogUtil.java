@@ -21,7 +21,8 @@ import java.util.Date;
 public class LogUtil {
     
     //todo : change this path
-    public static String FILE_PATH = "/home/shweta/Work/myspace/projects/OtherProjects/scraper";
+    //public static String FILE_PATH = "/home/shweta/Work/myspace/projects/OtherProjects/scraper";
+    public static String FILE_PATH = "";
   
     public static String LOG_FILE = "log.txt";
     public static BufferedWriter log = null;
@@ -53,13 +54,17 @@ public class LogUtil {
     
     private static void readErrorLogFile() {
         try {
-            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-            URL url = classLoader.getResource("");
-            System.out.println(">>>>>>>>>>"+url.getPath());
-            FILE_PATH=url.getPath();
+            System.out.println("In readErrorLogFile");
+            //ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            //URL url = classLoader.getResource("");
+            //System.out.println(">>>>>>>>>>"+url.getPath());
+            //FILE_PATH=url.getPath();
             
             
-            file = new File(FILE_PATH + File.separator + LOG_FILE);
+            //file = new File(FILE_PATH + File.separator + LOG_FILE);
+            file = new File(FILE_PATH + LOG_FILE);
+            System.out.println("LOG Location >> "+FILE_PATH + LOG_FILE);
+            System.out.println("LOG File Path >> "+file.getAbsolutePath());
             log = new BufferedWriter(new FileWriter(file, true));
         } catch (Exception e) {
             System.out.println("Exception at reading log file : " + e);

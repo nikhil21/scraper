@@ -38,7 +38,7 @@ public class AmazonWebScraper implements IWebScraper {
     private static final String amazonBookFinalURL = "www.amazon.com/gp/offer-listing/";
     private static final String altImageStr = "Return to product information";
     //private static final String imagePath = "C:\\Users\\Shweta\\Work\\myspace\\projects\\OtherProjects\\scraper";
-    private static final String imagePath = ".";
+    private static final String imagePath = "";
 
     @Override
     public void fetchDetails(String searchString) {
@@ -100,7 +100,9 @@ public class AmazonWebScraper implements IWebScraper {
         // now get the image
         HtmlImage image = page.<HtmlImage>getFirstByXPath("//img[@alt='Return to product information']");
         String imageLocation = imagePath + "image-" + isbnNo + ".jpg";
+        System.out.println("Image Location >> "+imageLocation);
         File imageFile = new File(imageLocation);
+        System.out.println("Image File Path >> "+imageFile.getAbsolutePath());
         image.saveAs(imageFile);
     }
 
