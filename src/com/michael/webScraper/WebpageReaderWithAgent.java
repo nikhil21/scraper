@@ -4,6 +4,7 @@
  */
 package com.michael.webScraper;
 
+import Employees.Workers;
 import com.csvreader.CsvReader;
 import static com.michael.webScraper.DatabaseUtil.conn;
 import static com.michael.webScraper.DatabaseUtil.done;
@@ -715,15 +716,10 @@ public class WebpageReaderWithAgent extends javax.swing.JFrame {
     private void jInitDbButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jInitDbButtonActionPerformed
         try {
             // TODO add your handling code here:
-            System.out.println(">>>"+ new File(".").getAbsolutePath());
-            textUrl1.setText(new File(".").getCanonicalPath());
-            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-            System.out.println("Here!!");
-            URL url = classLoader.getResource("");
-            System.out.println("Path "+url.getPath());
-            File file = new File(url.getPath());
-            System.out.println("File sepa "+File.separator);
-            System.out.println(">>>>>>>>>>"+url.getPath());
+            DatabaseUtil.establishDatabaseConnection();
+            Workers initDB = new Workers();
+            initDB.makeTableIfNotExists();
+            //initDB.populateTableFromCSV();
             //File relativeFile = new File(getClass().getResource(File.separator+"resources"+File.separator+"zips.csv").toURI());
             //System.out.println("Absolute Path >> "+relativeFile.getAbsolutePath()); 
         } catch (Exception ex) {

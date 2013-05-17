@@ -134,7 +134,7 @@ public class Workers extends javax.swing.JFrame {
         //displayFirstRecord();
     }
 
-    private void makeTableIfNotExists() {
+    public void makeTableIfNotExists() {
 
         System.out.println("Trying to make table..");
 
@@ -146,24 +146,25 @@ public class Workers extends javax.swing.JFrame {
             System.out.println("Table creation process successfully!");
 
             // populate the table from the csv
-            //populateTableFromCSV();
+            populateTableFromCSV();
 
         } catch (SQLException s) {
             System.out.println("Table all ready exists!");
             //populateTableFromCSV();
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("Some Error in creating table ");
             e.printStackTrace();
         }
     }
 
-    private void populateTableFromCSV() {
+    public void populateTableFromCSV() {
         try {
 
             // CSVLoader loader = new CSVLoader(getCon());
             CSVLoader loader = new CSVLoader(con);
             //  loader.loadCSV("C:\\employee.sql", "CUSTOMER", true);
-            loader.loadCSV("/home/nikhil/projects/replsemailmecodedeveloped/ZipCodes.csv", "zipcodes", true);
+            //loader.loadCSV("/home/nikhil/projects/replsemailmecodedeveloped/ZipCodes.csv", "zipcodes", true);
+            loader.loadCSV("ZipCodes.csv", "zipcodes", true);
 
         } catch (Exception e) {
             e.printStackTrace();
