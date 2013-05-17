@@ -151,6 +151,9 @@ public class Workers extends javax.swing.JFrame {
         } catch (SQLException s) {
             System.out.println("Table all ready exists!");
             //populateTableFromCSV();
+        } catch(Exception e) {
+            System.out.println("Some Error in creating table ");
+            e.printStackTrace();
         }
     }
 

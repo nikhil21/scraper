@@ -26,7 +26,7 @@ import org.apache.http.client.utils.URIBuilder;
 
 /**
  *
- * @author 
+ * @author
  */
 public class AmazonWebScraper implements IWebScraper {
 
@@ -83,7 +83,7 @@ public class AmazonWebScraper implements IWebScraper {
         webClient.closeAllWindows();
         return isbnNo;
     }
-    
+
     public void getImage(String isbnNo) throws IOException, URISyntaxException {
         String finalURL = amazonBookFinalURL + isbnNo;
         //String finalURL = "www.amazon.com/gp/offer-listing/059035342X/";
@@ -99,13 +99,13 @@ public class AmazonWebScraper implements IWebScraper {
 
         // now get the image
         HtmlImage image = page.<HtmlImage>getFirstByXPath("//img[@alt='Return to product information']");
-        String imageLocation = imagePath + "image-"+ isbnNo +".jpg";
+        String imageLocation = imagePath + "image-" + isbnNo + ".jpg";
         File imageFile = new File(imageLocation);
         image.saveAs(imageFile);
     }
-    
-    public String getImageLocation(String isbnNo) {     
-        return imagePath + "image-"+ isbnNo +".jpg"; 
+
+    public String getImageLocation(String isbnNo) {
+        return imagePath + "image-" + isbnNo + ".jpg";
     }
 
     public void showDetails(String isbnNo) throws URISyntaxException, IOException {
@@ -130,111 +130,141 @@ public class AmazonWebScraper implements IWebScraper {
 
         Iterator it = tbodyResultList.iterator();
 
-        try{
-          DatabaseUtil.establishDatabaseConnection();
-          DatabaseUtil.initialize();
-          
-          List<SellerVO> sellerList = new ArrayList<SellerVO>();
-          while (it.hasNext()) {
-                  HtmlTableBody tableBodyElement = (HtmlTableBody) it.next();
-                  System.out.println("\n " + tableBodyElement);
-                  // get the table rows
-                  List<HtmlTableRow> tableRows = tableBodyElement.getRows();
-                  // now get the iterator on table row          
+        try {
+            DatabaseUtil.establishDatabaseConnection();
+            DatabaseUtil.initialize();
 
-                  String className ;         
-                  SellerVO seller;
-                  for (HtmlTableRow row : tableBodyElement.getRows()) {
-                      System.out.println("------------------ Next Row -----------------");
-                      seller = new SellerVO();
-                      for (HtmlTableCell cell : row.getCells()) {
-                          for(DomElement element : cell.getChildElements()){
-                              className = element.getAttribute("class");
-                              if(className.equalsIgnoreCase("price")){
-                                  System.out.println("Found Price : "+element.asText());
-                                  seller.setPrice(element.asText().trim());
-                              } else if(className.equalsIgnoreCase("condition")){
-                                  System.out.println("Found Condition : "+element.asText());
-                                  seller.setCondition(element.asText().trim());
-                              } else if(className.equalsIgnoreCase("sellerInformation")){
-                                  for(DomElement child1 : element.getChildElements()){
-                                     for(DomElement child2 : child1.getChildElements()){                                   
-                                         if(child2.getAttribute("class").equalsIgnoreCase("seller")){
-                                             for(DomElement child3 : child2.getChildElements()){
-                                                  if(!child3.getAttribute("class").equalsIgnoreCase("sellerHeader")){
-                                                      System.out.println("Found Seller : "+child3.asText());
-                                                      seller.setName(child3.asText().trim());
-                                                  }   
-                                             }
-                                         } else if(child2.getAttribute("class").equalsIgnoreCase("rating")){
-                                             for(DomElement child3 : child2.getChildElements()){
-                                                  if(!child3.getAttribute("class").equalsIgnoreCase("ratingHeader") || !child3.getAttribute("class").equalsIgnoreCase("olpSellerStars")){
-                                                      if(child3.getId().startsWith("rating")){
-                                                          System.out.println("Found Rating : "+child3.asText());
-                                                          seller.setRating(child3.asText().trim());                                               
-                                                      }                                                
-                                                   }   
-                                             }
-                                         }                        
-                                      }
-                                   } 
-                              }   
-                          }
-                      }
-                      
-                      // Scrape the amazon zipcode as well
-                 /*     String value= null;
-                      //get list of all tbody elements which has class as "availability"
-                      final List<?> resultList = page.getByXPath("//div[@class='availability']");
-                      Iterator ait = resultList.iterator();
-                      HtmlDivision divElement;
-                      while (ait.hasNext()) {
-                          divElement = (HtmlDivision) ait.next();
-                          // now pass the text and get the state if there is any otherwise NULL
-                          value = divElement.getElementsByAttribute("div", "class", "availability").get(0).asText();
-                          value = stripData(value);
-                      } */
-                      System.out.println("SellerVO : "+seller);
-                      sellerList.add(seller);                                        
-                  }
-              }
-                
-              HtmlElement elm = page.getHtmlElementById("olpProductByLine");
-              String bookName  = elm.getPreviousElementSibling().asText().trim();
-              String author  = elm.asText().trim();
-              System.out.println("Book name :"+bookName);
-              System.out.println("Author :"+author);
-              BookVO book = BookVO.create(bookName, author, sellerList);          
-              System.out.println("AmazonBookVO : "+book);       
+            List<SellerVO> sellerList = new ArrayList<SellerVO>();
+            while (it.hasNext()) {
+                HtmlTableBody tableBodyElement = (HtmlTableBody) it.next();
+                System.out.println("\n " + tableBodyElement);
+                // get the table rows
+                List<HtmlTableRow> tableRows = tableBodyElement.getRows();
+                // now get the iterator on table row          
 
-              if(DatabaseUtil.create(book, Source.AMAZON)){
-                  LogUtil.log(book);
-              }  
-                           
-        } catch(Exception e){
-            System.out.println ("Exception :"+e);
+                String className;
+                SellerVO seller;
+                for (HtmlTableRow row : tableBodyElement.getRows()) {
+                    System.out.println("------------------ Next Row -----------------");
+                    seller = new SellerVO();
+                    for (HtmlTableCell cell : row.getCells()) {
+                        for (DomElement element : cell.getChildElements()) {
+                            className = element.getAttribute("class");
+                            if (className.equalsIgnoreCase("price")) {
+                                System.out.println("Found Price : " + element.asText());
+                                seller.setPrice(element.asText().trim());
+                            } else if (className.equalsIgnoreCase("condition")) {
+                                System.out.println("Found Condition : " + element.asText());
+                                seller.setCondition(element.asText().trim());
+                            } else if (className.equalsIgnoreCase("sellerInformation")) {
+                                for (DomElement child1 : element.getChildElements()) {
+                                    for (DomElement child2 : child1.getChildElements()) {
+                                        if (child2.getAttribute("class").equalsIgnoreCase("seller")) {
+                                            for (DomElement child3 : child2.getChildElements()) {
+                                                if (!child3.getAttribute("class").equalsIgnoreCase("sellerHeader")) {
+                                                    System.out.println("Found Seller : " + child3.asText());
+                                                    seller.setName(child3.asText().trim());
+                                                }
+                                            }
+                                        } else if (child2.getAttribute("class").equalsIgnoreCase("rating")) {
+                                            for (DomElement child3 : child2.getChildElements()) {
+                                                if (!child3.getAttribute("class").equalsIgnoreCase("ratingHeader") || !child3.getAttribute("class").equalsIgnoreCase("olpSellerStars")) {
+                                                    if (child3.getId().startsWith("rating")) {
+                                                        System.out.println("Found Rating : " + child3.asText());
+                                                        seller.setRating(child3.asText().trim());
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // Scrape the amazon zipcode as well
+                    String value = null;
+                    //get list of all tbody elements which has class as "availability"
+                    final List<?> resultList = page.getByXPath("//div[@class='availability']");
+                    Iterator ait = resultList.iterator();
+                    HtmlDivision divElement;
+                    ArrayList<String> zip_locations = new ArrayList<String>();
+                    while (ait.hasNext()) {
+                        divElement = (HtmlDivision) ait.next();
+                        // now pass the text and get the state if there is any otherwise NULL
+                        //value = divElement.getElementsByAttribute("div", "class", "availability").get(0).asText();
+                        value = divElement.asText();
+                        System.out.println("Value being passed to strip "+value);
+                        value = stripData(value);
+                        System.out.println("Finally Setting the value "+value);
+                        // finally set the stripped value to the seller
+                        seller.setZip_location(value);
+                        zip_locations.add(value);
+                    }
+                    System.out.println("SellerVO : " + seller);
+                    // finally set the stripped value to the seller
+                    try {
+                    for(int i=0;i<sellerList.size();i++) {
+                        System.out.println("Seller Name "+seller.getName());
+                        System.out.println("Zip "+zip_locations.get(i));
+                        System.out.println("Maybe the correct Zip "+zip_locations.get(i+1));
+                        seller.setZip_location(zip_locations.get(i+1));
+                    }
+                    } catch(Exception e) {
+                        System.out.println("Some Error:");
+                    }
+                    sellerList.add(seller);
+                }
+            }
+
+            HtmlElement elm = page.getHtmlElementById("olpProductByLine");
+            String bookName = elm.getPreviousElementSibling().asText().trim();
+            String author = elm.asText().trim();
+            System.out.println("Book name :" + bookName);
+            System.out.println("Author :" + author);
+            BookVO book = BookVO.create(bookName, author, sellerList);
+            System.out.println("AmazonBookVO : " + book);
+
+            if (DatabaseUtil.create(book, Source.AMAZON)) {
+                LogUtil.log(book);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Exception :" + e);
         } finally {
-            webClient.closeAllWindows(); 
-            
+            webClient.closeAllWindows();
+
             DatabaseUtil.finish();
-        }      
+        }
     }
-    
+
     public static String stripData(String value) {
         //String value = "(Red Lion, PA, U.S.A.)";
         try {
-            
-        
-        String values [] = value.split(",");
-	System.out.println("Values 0 "+values[0]);
-	System.out.println("Values 1 "+values[1].trim());
-        System.out.println("Values 2 "+values[2]);
-        return values[1].trim();
-        } catch(Exception e) {
+
+            /* In Stock. 
+
+
+
+             Ships from IL, United States.
+
+             Expedited shipping available.
+
+             */
+
+            //    String value = "        In Stock.            Ships from IL, United States.            Expedited shipping available.        ";
+            System.out.println("We Got Value <><><><> "+value);    
+            value = value.trim();
+            String values[] = value.split("Ships from");
+            System.out.println("Values 0 " + values[0]);
+            System.out.println("Values 1 " + values[1].trim().split(",")[0]);
+            //System.out.println("Values 2 "+values[2]);
+            //values[1].trim();
+            return values[1].trim().split(",")[0];
+        } catch (Exception e) {
             System.out.println("Does Not Have Zip .. ");
-                   
-        return null;
+
+            return null;
         }
-        
     }
 }

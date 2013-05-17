@@ -221,4 +221,25 @@ public class DatabaseUtil {
         return (id<1)?1:id;
     }
     
+    public static ArrayList<BookVO> getAllBooks(String query) {
+        establishDatabaseConnection();
+        ArrayList<BookVO> books = new ArrayList<BookVO>();
+        try {
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                BookVO book = new BookVO();
+                book.setBookName(rs.getString("book_name"));
+                book.setId(rs.getInt("id"));
+                book.setAuthor(rs.getString("author"));
+                book.setSource(rs.getString("source"));
+                books.add(book);
+            }
+        } catch (Exception e) {
+            System.out.println("Exception at fetching books : " + e);
+        } finally {
+            finish();
+        }
+        return books;
+    }
+    
 }

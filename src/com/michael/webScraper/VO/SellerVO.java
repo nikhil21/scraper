@@ -20,7 +20,8 @@ public class SellerVO {
 
     @Override
     public String toString() {
-        return "SellerVO{" + "name=" + name + ", rating=" + rating + ", price=" + price + ", condition=" + condition + '}';
+        return "SellerVO{" + "name=" + name + ", rating=" + rating + ", price=" + price + ","
+                + " condition=" + condition +" location=" +zip_location+ '}';
     }
 
     public void setName(String name) {

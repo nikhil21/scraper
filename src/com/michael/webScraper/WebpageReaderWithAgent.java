@@ -9,15 +9,19 @@ import static com.michael.webScraper.DatabaseUtil.conn;
 import static com.michael.webScraper.DatabaseUtil.done;
 import static com.michael.webScraper.DatabaseUtil.getId;
 import static com.michael.webScraper.DatabaseUtil.query;
+import com.michael.webScraper.VO.BookVO;
 import com.michael.webScraper.VO.SellerVO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
@@ -34,7 +38,7 @@ public class WebpageReaderWithAgent extends javax.swing.JFrame {
 
     /**
      * Code to show values from database
-     * @param evt 
+     * 
      */
     private void showValuesFromDatabase() {                                         
         // TODO add your handling code here:
@@ -63,7 +67,77 @@ public class WebpageReaderWithAgent extends javax.swing.JFrame {
         model.addColumn("Price");
         model.addColumn("Rating");
         model.addColumn("Seller Location");
-        model.addColumn("Dist (in kms)");
+        model.addColumn("Dist (in mi)");
+        
+        // get the current lat & long, defaulting to 0 latitude and 0 longitude
+         ZipCodeVO currentLocation = HaverSineUtil.getCurrentLatAndLong(jCurrentZipText.getText());
+        
+        for (SellerVO seller : sellerList1) {
+            double distance = 0.0;
+            System.out.println("Seller zip location for abe "+seller.getZip_location());
+            ZipCodeVO sellerLocation = DatabaseUtil.getZipCodeDetailsFromName(seller.getZip_location()); 
+            if(sellerLocation != null) {
+                distance = HaverSineUtil.distanceOnEarthBetweenPointsInKm(
+                        sellerLocation.getLatitude().doubleValue(),
+                        sellerLocation.getLongitude().doubleValue(),
+                        currentLocation.getLatitude().doubleValue(),
+                        currentLocation.getLongitude().doubleValue());
+            }
+            model.addRow(new Object[]{"ABE", seller.getName(), seller.getPrice(), 
+                seller.getRating(), seller.getZip_location(), distance});
+        }
+        for (SellerVO seller : sellerList2) {
+            System.out.println("Seller zip location for abe "+seller.getZip_location());
+            double distance = 0.0;
+            ZipCodeVO sellerLocation = DatabaseUtil.getZipCodeDetailsFromName(seller.getZip_location()); 
+            if(sellerLocation != null) {
+                distance = HaverSineUtil.distanceOnEarthBetweenPointsInKm(
+                        sellerLocation.getLatitude().doubleValue(),
+                        sellerLocation.getLongitude().doubleValue(),
+                        currentLocation.getLatitude().doubleValue(),
+                        currentLocation.getLongitude().doubleValue());
+            }
+            model.addRow(new Object[]{"Amazon", seller.getName(), 
+                seller.getPrice(), 
+                seller.getRating(),
+                seller.getZip_location(), distance});
+        }
+
+        //jTable1.setVisible(true);
+    }                                        
+
+    /**
+     * Code to search values from database
+     * @param bookName
+     */
+    private void searchDatabase(String bookName) {                                         
+        // TODO add your handling code here:
+        DefaultTableModel model = new DefaultTableModel();
+        jTable1.setModel(model);
+        // retrieve the last two ids from book table
+        DatabaseUtil.establishDatabaseConnection();
+        query = "select max(id) from book";
+        int book_id_max = DatabaseUtil.getId(query, 1);
+        query = "select max(id) - 1 from book";
+        int book_id_max_but_one = DatabaseUtil.getId(query, 1);
+        System.out.println("New Book ID : " + book_id_max);
+
+        // populate the SellerVO list using the ids fetched
+        // first max id
+        query = "select * from seller where book_id=" + book_id_max;
+        ArrayList<SellerVO> sellerList1 = DatabaseUtil.getAllSellers(query);
+        // one but max id
+        query = "select * from seller where book_id=" + book_id_max_but_one;
+        ArrayList<SellerVO> sellerList2 = DatabaseUtil.getAllSellers(query);
+        //commit
+
+        // Then start adding the rows
+        model.addColumn("Source");
+        model.addColumn("Seller Name");
+        model.addColumn("Price");
+        model.addColumn("Rating");
+        model.addColumn("Seller Location");
+        model.addColumn("Dist (in mi)");
         
         // get the current lat & long, defaulting to 0 latitude and 0 longitude
          ZipCodeVO currentLocation = HaverSineUtil.getCurrentLatAndLong(jCurrentZipText.getText());
@@ -156,6 +230,16 @@ public class WebpageReaderWithAgent extends javax.swing.JFrame {
      */
     public WebpageReaderWithAgent() {
         initComponents();
+        initData();
+        
+    }
+    
+    private void initData() {
+        query = "select * from book where id%2=0";
+        ArrayList<BookVO> books = DatabaseUtil.getAllBooks(query);
+        for(BookVO book : books) {
+            choice1.add(book.getBookName());
+        }
     }
 
     /**
@@ -180,6 +264,10 @@ public class WebpageReaderWithAgent extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jCurrentZipText = new javax.swing.JTextField();
+        choice1 = new java.awt.Choice();
+        jDBSearchButton = new javax.swing.JButton();
+        popChoiceButton = new javax.swing.JButton();
+        jInitDbButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -220,6 +308,27 @@ public class WebpageReaderWithAgent extends javax.swing.JFrame {
 
         jLabel3.setText("Zip Code");
 
+        jDBSearchButton.setText("SearchDB");
+        jDBSearchButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jDBSearchButtonActionPerformed(evt);
+            }
+        });
+
+        popChoiceButton.setText("All Choices");
+        popChoiceButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                popChoiceButtonActionPerformed(evt);
+            }
+        });
+
+        jInitDbButton.setText("InitDB");
+        jInitDbButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jInitDbButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -236,59 +345,70 @@ public class WebpageReaderWithAgent extends javax.swing.JFrame {
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 573, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(599, 599, 599))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addGap(127, 127, 127)
-                        .addComponent(buttonGo, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(38, 38, 38)
-                        .addComponent(jButton1)
-                        .addGap(76, 76, 76)
-                        .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel3))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(textUrl1, javax.swing.GroupLayout.PREFERRED_SIZE, 446, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jCurrentZipText, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                            .addComponent(textUrl1, javax.swing.GroupLayout.PREFERRED_SIZE, 446, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jCurrentZipText, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(choice1, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(325, 325, 325)))
                 .addComponent(picLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(173, 173, 173))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(84, 84, 84)
+                .addComponent(buttonGo, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jInitDbButton)
+                .addGap(50, 50, 50)
+                .addComponent(jDBSearchButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(popChoiceButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(26, 26, 26)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(textUrl1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(choice1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(textUrl1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(424, 424, 424)
+                        .addComponent(picLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel3)
                             .addComponent(jCurrentZipText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(23, 23, 23)
+                                .addGap(29, 29, 29)
                                 .addComponent(jLabel2))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(28, 28, 28)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(30, 30, 30)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jButton2)
+                                    .addComponent(buttonGo)
                                     .addComponent(jButton1)
-                                    .addComponent(buttonGo))
-                                .addGap(20, 20, 20)
-                                .addComponent(jLabel6))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(424, 424, 424)
-                        .addComponent(picLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(jButton2)
+                                    .addComponent(jDBSearchButton)
+                                    .addComponent(popChoiceButton)
+                                    .addComponent(jInitDbButton))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel6)
+                        .addGap(90, 90, 90))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -328,7 +448,7 @@ public class WebpageReaderWithAgent extends javax.swing.JFrame {
 
             scraper.getImage(isbnNo);
             String imageLocation = scraper.getImageLocation(isbnNo);
-            //String imageLocation = "/home/nikhil/NetBeansProjects/testWebScraperHtmlUnit/image1.jpg";
+            
             // get the image from the file System
             BufferedImage image = null;
             try {
@@ -385,7 +505,7 @@ public class WebpageReaderWithAgent extends javax.swing.JFrame {
         model.addColumn("Price");
         model.addColumn("Rating");
         model.addColumn("Seller Location");
-        model.addColumn("Dist (in kms)");
+        model.addColumn("Dist (m)");
         
         // get the current lat & long, defaulting to 0 latitude and 0 longitude
          ZipCodeVO currentLocation = HaverSineUtil.getCurrentLatAndLong(jCurrentZipText.getText());
@@ -476,6 +596,110 @@ public class WebpageReaderWithAgent extends javax.swing.JFrame {
         }
     
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jDBSearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jDBSearchButtonActionPerformed
+        // TODO add your handling code here:
+        // get the choice first
+        String bookName = choice1.getSelectedItem();
+        System.out.println("BookName From Choice "+bookName);
+        int index = choice1.getSelectedIndex();
+        System.out.println("Book Index From Choice "+index);
+        DefaultTableModel model = new DefaultTableModel();
+        jTable1.setModel(model);
+        // retrieve the last two ids from book table
+        DatabaseUtil.establishDatabaseConnection();
+        query = "select id from book where id="+(index+1*2);
+        int book_id_max = DatabaseUtil.getId(query, 1);
+        query = "select id from book where id="+((index+1)*2-1);
+        int book_id_max_but_one = DatabaseUtil.getId(query, 1);
+        System.out.println("New Book ID : " + book_id_max);
+
+        // populate the SellerVO list using the ids fetched
+        // first max id
+        query = "select * from seller where book_id=" + book_id_max;
+        ArrayList<SellerVO> sellerList1 = DatabaseUtil.getAllSellers(query);
+        // one but max id
+        query = "select * from seller where book_id=" + book_id_max_but_one;
+        ArrayList<SellerVO> sellerList2 = DatabaseUtil.getAllSellers(query);
+        //commit
+
+        // Then start adding the rows
+        model.addColumn("Source");
+        model.addColumn("Seller Name");
+        model.addColumn("Price");
+        model.addColumn("Rating");
+        model.addColumn("Seller Location");
+        model.addColumn("Dist (in mi)");
+        
+        // get the current lat & long, defaulting to 0 latitude and 0 longitude
+         ZipCodeVO currentLocation = HaverSineUtil.getCurrentLatAndLong(jCurrentZipText.getText());
+        
+        for (SellerVO seller : sellerList1) {
+            double distance = 0.0;
+            System.out.println("Seller zip location for abe "+seller.getZip_location());
+            ZipCodeVO sellerLocation = DatabaseUtil.getZipCodeDetailsFromName(seller.getZip_location()); 
+            if(sellerLocation != null) {
+                distance = HaverSineUtil.distanceOnEarthBetweenPointsInKm(
+                        sellerLocation.getLatitude().doubleValue(),
+                        sellerLocation.getLongitude().doubleValue(),
+                        currentLocation.getLatitude().doubleValue(),
+                        currentLocation.getLongitude().doubleValue());
+            }
+            model.addRow(new Object[]{"ABE", seller.getName(), seller.getPrice(), 
+                seller.getRating(), seller.getZip_location(), distance});
+        }
+        for (SellerVO seller : sellerList2) {
+            System.out.println("Seller zip location for Amazon "+seller.getZip_location());
+            double distance = 0.0;
+            ZipCodeVO sellerLocation = DatabaseUtil.getZipCodeDetailsFromName(seller.getZip_location()); 
+            if(sellerLocation != null) {
+                distance = HaverSineUtil.distanceOnEarthBetweenPointsInKm(
+                        sellerLocation.getLatitude().doubleValue(),
+                        sellerLocation.getLongitude().doubleValue(),
+                        currentLocation.getLatitude().doubleValue(),
+                        currentLocation.getLongitude().doubleValue());
+            }
+            model.addRow(new Object[]{"Amazon", seller.getName(), 
+                seller.getPrice(), 
+                seller.getRating(),
+                seller.getZip_location(), distance});
+        }
+
+    }//GEN-LAST:event_jDBSearchButtonActionPerformed
+
+    private void popChoiceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popChoiceButtonActionPerformed
+        // TODO add your handling code here:
+        query = "select * from book where id%2=0";
+        ArrayList<BookVO> books = DatabaseUtil.getAllBooks(query);
+        for(BookVO book : books) {
+            choice1.add(book.getBookName());
+        }
+    }//GEN-LAST:event_popChoiceButtonActionPerformed
+    
+    /*
+     * This button makes the zipcodes table and inserts records from the csv into 
+     * this table
+     */
+    private void jInitDbButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jInitDbButtonActionPerformed
+        try {
+            // TODO add your handling code here:
+            System.out.println(">>>"+ new File(".").getAbsolutePath());
+            textUrl1.setText(new File(".").getCanonicalPath());
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            System.out.println("Here!!");
+            URL url = classLoader.getResource("");
+            System.out.println("Path "+url.getPath());
+            File file = new File(url.getPath());
+            System.out.println("File sepa "+File.separator);
+            System.out.println(">>>>>>>>>>"+url.getPath());
+            //File relativeFile = new File(getClass().getResource(File.separator+"resources"+File.separator+"zips.csv").toURI());
+            //System.out.println("Absolute Path >> "+relativeFile.getAbsolutePath()); 
+        } catch (Exception ex) {
+            System.out.println("Exception "+ex);
+            Logger.getLogger(WebpageReaderWithAgent.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_jInitDbButtonActionPerformed
 /**
  * @param args the command line arguments
  */
@@ -528,9 +752,12 @@ catch (javax.swing.UnsupportedLookAndFeelException ex) {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonGo;
+    private java.awt.Choice choice1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JTextField jCurrentZipText;
+    private javax.swing.JButton jDBSearchButton;
+    private javax.swing.JButton jInitDbButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -539,6 +766,7 @@ catch (javax.swing.UnsupportedLookAndFeelException ex) {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel picLabel;
+    private javax.swing.JButton popChoiceButton;
     private javax.swing.JTextField textUrl1;
     // End of variables declaration//GEN-END:variables
 }
