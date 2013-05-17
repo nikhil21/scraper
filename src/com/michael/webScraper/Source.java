@@ -10,7 +10,7 @@ package com.michael.webScraper;
  */
 public enum Source {
 
-    AMAZON("amazon.com"), ABE("abs.com");
+    AMAZON("amazon.com"), ABE("abe.com");
     
     private String value;
 
