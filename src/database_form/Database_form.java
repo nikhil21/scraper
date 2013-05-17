@@ -5,7 +5,6 @@
 package database_form;
 
 import Employees.Workers;
-import com.michael.webScraper.WebpageReaderWithAgent;
 
 /**
  *
@@ -18,8 +17,6 @@ public class Database_form {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        //new Workers();
-        
-        WebpageReaderWithAgent.main(args);
+        new Workers();
     }
 }
