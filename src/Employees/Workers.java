@@ -49,7 +49,9 @@ public class Workers extends javax.swing.JFrame {
 
         try {
             con = DriverManager
-                    .getConnection("jdbc:mysql://localhost:3306/zipcode", "root", "root123");   /*Change db details relative to your local box*/
+                    .getConnection("jdbc:mysql://localhost:3306/zipcode", "root", "root123");
+                   //  .getConnection("jdbc:mysql://localhost:3306/zipcode", "root", "root");      
+            /*Change db details relative to your local box*/
 
         } catch (SQLException e) {
             System.out.println("Connection Failed! Check output console");

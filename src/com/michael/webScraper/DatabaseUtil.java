@@ -89,6 +89,7 @@ public class DatabaseUtil {
             String driver = "com.mysql.jdbc.Driver";
             String userName = "root";
             String password = "root123";
+            //String password = "root";
 
             Class.forName(driver).newInstance();
             conn = DriverManager.getConnection(url + dbName, userName, password);
