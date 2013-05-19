@@ -15,13 +15,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- *
- * @author 
+ * Used for writing the log file.
  */
 public class LogUtil {
     
-    //todo : change this path
-    //public static String FILE_PATH = "/home/shweta/Work/myspace/projects/OtherProjects/scraper";
+  
     public static String FILE_PATH = "";
   
     public static String LOG_FILE = "log.txt";

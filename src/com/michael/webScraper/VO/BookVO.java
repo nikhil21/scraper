@@ -10,9 +10,8 @@ import java.util.List;
 
 /**
  *
- * This class is supposed to show the information we get after scraping the 
- * web page.
- * @author nikhil
+ * This class is supposed to show the book information we 
+ * get after scraping the web page. This class is used for persistence as well
  */
 public class BookVO {
     

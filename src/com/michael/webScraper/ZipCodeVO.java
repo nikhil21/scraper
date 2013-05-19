@@ -7,8 +7,8 @@ package com.michael.webScraper;
 import java.math.BigDecimal;
 
 /**
- *
- * @author 
+ * Just convinence class written for conversions to and from zipName and 
+ * zipCode to latitude and longitide
  */
 public class ZipCodeVO {
     

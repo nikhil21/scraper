@@ -19,8 +19,7 @@ import java.util.Date;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
- *
- * @author 
+ * Used for database specific operations
  */
 public class DatabaseUtil {
     public static Connection conn= null;
@@ -88,8 +87,8 @@ public class DatabaseUtil {
             String dbName = "zipcode";
             String driver = "com.mysql.jdbc.Driver";
             String userName = "root";
-            String password = "root123";
-            //String password = "root";
+            //String password = "root123";
+            String password = "root";
 
             Class.forName(driver).newInstance();
             conn = DriverManager.getConnection(url + dbName, userName, password);

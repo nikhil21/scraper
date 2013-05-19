@@ -5,8 +5,7 @@
 package Employees;
 
 /**
- *
- * @author nikhil
+ * Functions containing loading of CSV into the database.
  */
 import java.io.FileNotFoundException;
 import java.io.FileReader;

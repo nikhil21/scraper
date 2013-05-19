@@ -5,8 +5,7 @@
 package com.michael.webScraper;
 
 /**
- *
- * @author 
+ * Interface intended to be implemented when a new scraper is written
  */
 public interface IWebScraper {
     

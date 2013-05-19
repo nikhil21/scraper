@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author nikhil
+ * 
  */
 public class Workers extends javax.swing.JFrame {
 
@@ -49,8 +49,8 @@ public class Workers extends javax.swing.JFrame {
 
         try {
             con = DriverManager
-                    .getConnection("jdbc:mysql://localhost:3306/zipcode", "root", "root123");
-                   //  .getConnection("jdbc:mysql://localhost:3306/zipcode", "root", "root");      
+                   // .getConnection("jdbc:mysql://localhost:3306/zipcode", "root", "root123");
+                     .getConnection("jdbc:mysql://localhost:3306/zipcode", "root", "root");      
             /*Change db details relative to your local box*/
 
         } catch (SQLException e) {
@@ -165,7 +165,7 @@ public class Workers extends javax.swing.JFrame {
             // CSVLoader loader = new CSVLoader(getCon());
             CSVLoader loader = new CSVLoader(con);
             //  loader.loadCSV("C:\\employee.sql", "CUSTOMER", true);
-            //loader.loadCSV("/home/nikhil/projects/replsemailmecodedeveloped/ZipCodes.csv", "zipcodes", true);
+            
             loader.loadCSV("ZipCodes.csv", "zipcodes", true);
 
         } catch (Exception e) {

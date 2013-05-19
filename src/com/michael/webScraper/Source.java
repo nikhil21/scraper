@@ -5,8 +5,7 @@
 package com.michael.webScraper;
 
 /**
- *
- * @author 
+ * Enum setting all the showing Sources 
  */
 public enum Source {
 

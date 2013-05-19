@@ -18,8 +18,7 @@ import java.util.List;
 import org.apache.http.client.utils.URIBuilder;
 
 /**
- *
- * @author 
+ * Used to scrape abebooks.com web site 
  */
 public class AbeWebScraper implements IWebScraper {
 

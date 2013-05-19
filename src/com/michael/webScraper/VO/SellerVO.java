@@ -6,7 +6,8 @@ package com.michael.webScraper.VO;
 
 /**
  *
- * @author 
+ * This class is supposed to show the information of seller(s) we get
+ * after scraping the web page. This class is used for persistence as well
  */
 public class SellerVO {
 

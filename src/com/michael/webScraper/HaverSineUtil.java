@@ -11,8 +11,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 
 /**
- *
- * @author
+ * Written for calculation of distances between two points on Earth using the HaverSin Formula
  */
 public class HaverSineUtil {
 
@@ -25,7 +24,8 @@ public class HaverSineUtil {
                 + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
                 * Math.sin(dLon / 2) * Math.sin(dLon / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double d = r * c;
+        double d = r * c; 
+        // to convert in miles
         return d*0.621371;
     }
     

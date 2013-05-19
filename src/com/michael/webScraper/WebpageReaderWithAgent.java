@@ -30,7 +30,9 @@ import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  *
- * @author nikhil
+ * This is the class which contains the main method which is the entry point 
+ * of the program. It contains the code for initializing the UI and code 
+ * written against the click of buttons
  */
 public class WebpageReaderWithAgent extends javax.swing.JFrame {
 
@@ -257,8 +259,6 @@ public class WebpageReaderWithAgent extends javax.swing.JFrame {
         picLabel = new javax.swing.JLabel();
         jDBSearchButton = new javax.swing.JButton();
         popChoiceButton = new javax.swing.JButton();
-        jInitDbButton = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         textUrl1 = new javax.swing.JTextField();
@@ -268,12 +268,10 @@ public class WebpageReaderWithAgent extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         buttonGo = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
+        jInitDbButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -288,20 +286,6 @@ public class WebpageReaderWithAgent extends javax.swing.JFrame {
         popChoiceButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 popChoiceButtonActionPerformed(evt);
-            }
-        });
-
-        jInitDbButton.setText("InitDB");
-        jInitDbButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jInitDbButtonActionPerformed(evt);
-            }
-        });
-
-        jButton3.setText("jButton3");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
             }
         });
 
@@ -323,20 +307,13 @@ public class WebpageReaderWithAgent extends javax.swing.JFrame {
                 .addComponent(picLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(173, 173, 173))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton3)
-                            .addComponent(jInitDbButton))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jDBSearchButton)
-                        .addGap(29, 29, 29)
-                        .addComponent(popChoiceButton))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(422, 422, 422)
-                        .addComponent(jButton5)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jDBSearchButton)
+                .addGap(35, 35, 35)
+                .addComponent(popChoiceButton)
+                .addGap(226, 226, 226)
+                .addComponent(jButton5)
+                .addContainerGap(1205, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -346,17 +323,13 @@ public class WebpageReaderWithAgent extends javax.swing.JFrame {
                         .addGap(478, 478, 478)
                         .addComponent(picLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(jButton5)
-                        .addGap(42, 42, 42)
+                        .addGap(93, 93, 93)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jInitDbButton)
                             .addComponent(jDBSearchButton)
-                            .addComponent(popChoiceButton))
+                            .addComponent(popChoiceButton)
+                            .addComponent(jButton5))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2)
-                        .addGap(23, 23, 23)
-                        .addComponent(jButton3)))
+                        .addComponent(jLabel2)))
                 .addContainerGap(24, Short.MAX_VALUE))
         );
 
@@ -381,32 +354,18 @@ public class WebpageReaderWithAgent extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Test");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        jButton4.setText("Log");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
-
-        jButton2.setText("Lat-LongTest");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
         jLabel6.setText("Image");
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
         jScrollPane2.setViewportView(jTextArea1);
+
+        jInitDbButton.setText("InitDB");
+        jInitDbButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jInitDbButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -416,25 +375,16 @@ public class WebpageReaderWithAgent extends javax.swing.JFrame {
                 .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(buttonGo, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton1))
+                    .addComponent(buttonGo, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
-                .addGap(8, 8, 8)
+                .addGap(69, 69, 69)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(jButton4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(12, 12, 12))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jLabel6)
-                                .addGap(105, 105, 105)))
+                            .addComponent(jLabel6)
+                            .addComponent(jInitDbButton))
+                        .addGap(93, 93, 93)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -471,16 +421,12 @@ public class WebpageReaderWithAgent extends javax.swing.JFrame {
                         .addGap(12, 12, 12))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 369, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(99, 99, 99)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(buttonGo)
-                            .addComponent(jButton1)
-                            .addComponent(jButton4)
-                            .addComponent(jButton2))
+                            .addComponent(jInitDbButton))
                         .addGap(38, 38, 38)
                         .addComponent(jLabel6)))
                 .addContainerGap())
@@ -488,11 +434,12 @@ public class WebpageReaderWithAgent extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    /*
+     * Scrapes the web, stores the results and displays them on the UI
+     */
     private void buttonGoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonGoActionPerformed
-        // TODO add your handling code here:
-        // first get the URL
-        //String url = textAuthorNameAmazon.getText();
+
         String url = textUrl1.getText();
         System.out.println("The url is >>> " + url);
         try {
@@ -532,129 +479,11 @@ public class WebpageReaderWithAgent extends javax.swing.JFrame {
             System.out.println("Exception Caught !!");
         }
     }//GEN-LAST:event_buttonGoActionPerformed
-    /**
-     * Code to show values from database
-     * @param evt 
-     */
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        DefaultTableModel model = new DefaultTableModel();
-        jTable1.setModel(model);
-        // retrieve the last two ids from book table
-        DatabaseUtil.establishDatabaseConnection();
-        query = "select max(id) from book";
-        int book_id_max = DatabaseUtil.getId(query, 1);
-        query = "select max(id) - 1 from book";
-        int book_id_max_but_one = DatabaseUtil.getId(query, 1);
-        System.out.println("New Book ID : " + book_id_max);
-
-        // populate the SellerVO list using the ids fetched
-        // first max id
-        query = "select * from seller where book_id=" + book_id_max;
-        ArrayList<SellerVO> sellerList1 = DatabaseUtil.getAllSellers(query);
-        // one but max id
-        query = "select * from seller where book_id=" + book_id_max_but_one;
-        ArrayList<SellerVO> sellerList2 = DatabaseUtil.getAllSellers(query);
-        //commit
-
-        // Then start adding the rows
-        model.addColumn("Source");
-        model.addColumn("Seller Name");
-        model.addColumn("Price");
-        model.addColumn("Rating");
-        model.addColumn("Seller Location");
-        model.addColumn("Dist (m)");
-        
-        // get the current lat & long, defaulting to 0 latitude and 0 longitude
-         ZipCodeVO currentLocation = HaverSineUtil.getCurrentLatAndLong(jCurrentZipText.getText());
-        
-        for (SellerVO seller : sellerList1) {
-            double distance = 0.0;
-            System.out.println("Seller zip location for abe "+seller.getZip_location());
-            ZipCodeVO sellerLocation = DatabaseUtil.getZipCodeDetailsFromName(seller.getZip_location()); 
-            if(sellerLocation != null) {
-                distance = HaverSineUtil.distanceOnEarthBetweenPointsInKm(
-                        sellerLocation.getLatitude().doubleValue(),
-                        sellerLocation.getLongitude().doubleValue(),
-                        currentLocation.getLatitude().doubleValue(),
-                        currentLocation.getLongitude().doubleValue());
-            }
-            model.addRow(new Object[]{"ABE", seller.getName(), seller.getPrice(), 
-                seller.getRating(), seller.getZip_location(), distance});
-        }
-        for (SellerVO seller : sellerList2) {
-            System.out.println("Seller zip location for abe "+seller.getZip_location());
-            double distance = 0.0;
-            ZipCodeVO sellerLocation = DatabaseUtil.getZipCodeDetailsFromName(seller.getZip_location()); 
-            if(sellerLocation != null) {
-                distance = HaverSineUtil.distanceOnEarthBetweenPointsInKm(
-                        sellerLocation.getLatitude().doubleValue(),
-                        sellerLocation.getLongitude().doubleValue(),
-                        currentLocation.getLatitude().doubleValue(),
-                        currentLocation.getLongitude().doubleValue());
-            }
-            model.addRow(new Object[]{"Amazon", seller.getName(), 
-                seller.getPrice(), 
-                seller.getRating(),
-                seller.getZip_location(), distance});
-        }
-
-        //jTable1.setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    /**
-     * Extract Latitude & Longitude From The Given Zip Code
-     * @param evt 
-     */
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-        String zipCode = "91601";
-        String latitude = "0";
-        String longitude = "0";
-        try {
-            /**
-             * JavaCVS api is required in order to read this, it can be found at
-             * http://sourceforge.net/projects/javacsv/
-                     *
-             */
-            CsvReader products = new CsvReader("zips.csv");
-            /**
-             * a cvs containing all the zip codes and latitudes and longitudes
-             * can be found at:
-             * http://sourceforge.net/projects/zips/files/zips/zips.csv.zip/
-                    *
-             */
-            products.readHeaders();
-            int numOfHeaders = products.getHeaderCount();
-            System.out.println("Number of headers" + numOfHeaders);
-            try {
-                while (products.readRecord()) {
-
-                    String lookedupZip = products.get(products.getHeader(0));
-                    if (lookedupZip.equals(zipCode)) {
-                        latitude = products.get(products.getHeader(2));
-                        longitude = products.get(products.getHeader(3));
-                    }
-
-                }
-                
-                System.out.println("latitude >> "+latitude);
-                System.out.println("longitude >> "+longitude);
-                
-                // now calculate the distance of the given lat & long
-                // with all the results 
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-
-        } catch (FileNotFoundException e1) {
-            e1.printStackTrace();
-        } catch (IOException e2) {
-            e2.printStackTrace();
-        }
     
-    }//GEN-LAST:event_jButton2ActionPerformed
-
+    /*
+     * Searches the database for the book selected from the drop down and 
+     * displays the result on UI
+     */
     private void jDBSearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jDBSearchButtonActionPerformed
         // TODO add your handling code here:
         // get the choice first
@@ -724,7 +553,10 @@ public class WebpageReaderWithAgent extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_jDBSearchButtonActionPerformed
-
+    
+    /*
+     * Shows all the books scraped so far in the drop box
+     */
     private void popChoiceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popChoiceButtonActionPerformed
         // TODO add your handling code here:
         query = "select * from book where id%2=0";
@@ -753,30 +585,6 @@ public class WebpageReaderWithAgent extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_jInitDbButtonActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-       
-        try {
-        new AmazonWebScraper().getImage("111111");  
-        } catch(Exception e) {
-            System.out.println("Exception "+e);
-        }
-    }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-        BookVO book = new BookVO();
-        book.setBookName("nikhil");
-        SellerVO seller1 = new SellerVO();
-        seller1.setName("seller1");
-        SellerVO seller2 = new SellerVO();
-        seller1.setName("seller2");
-        ArrayList<SellerVO> sellers = new ArrayList<SellerVO>();
-        sellers.add(seller1);
-        sellers.add(seller2);
-        book.setSellers(sellers);
-        LogUtil.log(book);
-    }//GEN-LAST:event_jButton4ActionPerformed
     
     /**
      * Display log file on click of button
@@ -849,10 +657,6 @@ catch (javax.swing.UnsupportedLookAndFeelException ex) {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonGo;
     private java.awt.Choice choice1;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JTextField jCurrentZipText;
     private javax.swing.JButton jDBSearchButton;
